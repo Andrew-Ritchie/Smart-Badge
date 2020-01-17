@@ -1,4 +1,3 @@
-import time
 print('Hello world! I can count:')
 i = 1
 while True:
