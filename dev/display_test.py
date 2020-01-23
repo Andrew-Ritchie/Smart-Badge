@@ -4,7 +4,7 @@
 import lvgl as lv
 from micropython import const
 from ili9341 import ili9341
-from widgets import Button
+from widgets import Button, TextArea
 import time
 
 # Initialise LittlevGL
@@ -31,13 +31,7 @@ btn.set_text("Option 1")
 btn2 = Button(scr, 5, 35, width=max_width, height=20)
 btn2.set_text("Option 2")
 
-btn3 = Button(scr, 5, 65, width=max_width, height=20)
-btn3.set_text("Option 3")
-
-btn4 = Button(scr, 5, 95, width=max_width, height=20)
-btn4.set_text("Really long option number 4")
+ta = TextArea(scr, 5, 65, max_width, 30)
+ta.set_text_content("Hello World!")
 
 lv.scr_load(scr)
-
-time.sleep_ms(1000)
-btn.click()

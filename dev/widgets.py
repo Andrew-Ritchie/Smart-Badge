@@ -26,3 +26,20 @@ class Button(lv.btn):
 
     def click(self):
         self.toggle()
+
+
+class TextArea(lv.ta):
+
+    def __init__(self, parent, x, y, width, height):
+        super().__init__(parent)
+        self.x = x
+        self.y = y
+        self.width = width
+        self.height = height
+        self.set_size(self.width, self.height)
+        self.set_pos(x, y)
+        self.set_cursor_type(lv.CURSOR.NONE)
+
+    def set_text_content(self, text):
+        self.set_text_align(lv.label.ALIGN.CENTER)
+        self.set_text(text)
