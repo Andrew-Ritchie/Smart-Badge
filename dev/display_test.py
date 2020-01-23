@@ -4,7 +4,7 @@
 import lvgl as lv
 from micropython import const
 from ili9341 import ili9341
-from widgets import Button, TextArea
+from widgets import Button, TextArea, Line
 import time
 
 # Initialise LittlevGL
@@ -25,13 +25,21 @@ scr = lv.obj()
 max_width = scr.get_width()-10
 
 # Create the buttons
-btn = Button(scr, 5, 5, width=max_width, height=20)
-btn.set_text("Option 1")
+# btn = Button(scr, 5, 5, width=max_width, height=20)
+# btn.set_text("Option 1")
 
-btn2 = Button(scr, 5, 35, width=max_width, height=20)
-btn2.set_text("Option 2")
+# btn2 = Button(scr, 5, 35, width=max_width, height=20)
+# btn2.set_text("Option 2")
 
-ta = TextArea(scr, 5, 65, max_width, 30)
-ta.set_text_content("Hello World!")
+# ta = TextArea(scr, 5, 65, max_width, 30)
+# ta.set_text_content("Hello World!")
+
+line = Line(scr, 10, 10)
+style = line.create_style(colour=(0xff, 0x00, 0x00), width=1, rounded=1)
+line.set_custom_style(style)
+line.set_line_points([{"x": 5, "y": 5},
+                      {"x": 70, "y": 70},
+                      {"x": 100, "y": 10},
+                      {"x": 5, "y": 5}])
 
 lv.scr_load(scr)

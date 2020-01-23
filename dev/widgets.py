@@ -43,3 +43,27 @@ class TextArea(lv.ta):
     def set_text_content(self, text):
         self.set_text_align(lv.label.ALIGN.CENTER)
         self.set_text(text)
+
+
+class Line(lv.line):
+
+    def __init__(self, parent, x, y, align=lv.ALIGN.CENTER):
+        super().__init__(parent)
+        self.x = x
+        self.y = y
+        self.align(None, lv.ALIGN.CENTER, self.x, self.y)
+        self.default_style = self.create_style()
+
+    def create_style(self, colour=(0x00, 0x3b, 0x75), width=3, rounded=1):
+        style_line = lv.style_t()
+        lv.style_copy(style_line, lv.style_plain)
+        style_line.line.color = lv.color_make(colour[0], colour[1], colour[2])
+        style_line.line.width = width
+        style_line.line.rounded = rounded
+        return style_line
+
+    def set_custom_style(self, style):
+        self.set_style(lv.line.STYLE.MAIN, style)
+
+    def set_line_points(self, points):
+        self.set_points(points, len(points))
