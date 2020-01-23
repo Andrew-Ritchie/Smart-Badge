@@ -13,10 +13,10 @@ lv.init()
 # Initialise and register the display
 # Registering is handled automatically by this contructor
 # Change 'rot' parameter to edit rotation
-disp = ili9341(miso=5, mosi=18, clk=19, cs=13,
-               dc=12, rst=4, backlight=2, width=128,
-               height=160, backlight_on=1, power=14,
-               power_on=1, rot=ili9341.MADCTL_MH, invert=False, mhz=30, colormode=ili9341.COLOR_MODE_RGB)
+disp = ili9341(miso=5, mosi=18, clk=19, cs=22,
+               dc=4, rst=21, backlight=2, width=160,
+               height=128, backlight_on=1, power=23,
+               power_on=1, rot=const(0xb0), invert=False, mhz=30, colormode=ili9341.COLOR_MODE_RGB)
 
 button = Pin(25, Pin.IN)
 
@@ -58,6 +58,7 @@ knob_on_style.body.shadow.type = lv.SHADOW.BOTTOM
 
 # Create a switch and apply the styles
 sw1 = lv.sw(lv.scr_act())
+sw1.set_size(40, 20)
 sw1.set_style(lv.sw.STYLE.BG, bg_style)
 sw1.set_style(lv.sw.STYLE.INDIC, indic_style)
 sw1.set_style(lv.sw.STYLE.KNOB_ON, knob_on_style)
@@ -71,7 +72,3 @@ sw2 = lv.sw(lv.scr_act(), sw1)
 sw2.on(lv.ANIM.ON)
 sw2.align(None, lv.ALIGN.CENTER, 0, 50)
 sw2.set_event_cb(lambda o, e: None)
-
-while True:
-    if button.value() == 1:
-        sw1.on(lv.ANIM.ON)
