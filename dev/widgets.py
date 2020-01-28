@@ -67,3 +67,22 @@ class Line(lv.line):
 
     def set_line_points(self, points):
         self.set_points(points, len(points))
+
+class Bar(lv.bar):
+
+    def __init__(self, parent, x, y, width=None, height=None):
+        # Note that for the 1.8" display, height must be a minimum of 11        
+        super().__init__(parent)
+        self.x = x
+        self.y = y
+        self.width = width                    
+        self.height = height if height >= 11 else 11
+        self.set_size(self.width, self.height)
+        self.set_pos(x, y)
+
+    def set_animation_time(self, time):
+        self.set_anim_time(time)
+
+    def set_value_animation(self, value, anim):
+        # Set anim=True to have an animation and False for static
+        self.set_value(value, lv.ANIM.ON if anim else lv.ANIM.OFF)    
