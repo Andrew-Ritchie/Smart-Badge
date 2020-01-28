@@ -91,6 +91,7 @@ class Image(lv.img):
 
     # To use images, the image must be converted to a binary using the converter 
     # at https://littlevgl.com/image-converter
+    # Choose "True Color" format and "Binary RGB565"
     # It is also likely that the image will need to be resized. Note the dimensions
     # of the **image file** and use these as width and height
 
