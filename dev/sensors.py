@@ -1,5 +1,6 @@
 from machine import I2C, Pin
 import lis3dh
+import time
 
 class Accelerometer(object):
     
@@ -23,8 +24,25 @@ class Button(object):
     def __init__(self,pin):
         self.pin = Pin(pin, mode=Pin.IN, pull=Pin.PULL_DOWN)
 
+        # Set up interrupt
+        self.pin.irq(handler=self._cb_rising, trigger=Pin.IRQ_RISING)
+        self.callback_rising = lambda x: return
+        self.last_trigger = time.ticks_ms()
+
     def get_value(self):
         return self.pin.value()
+
+    def _cb_rising(self, x):
+        # Only count the rising edge if spaced by 0.12ms (switch debounce)
+        if time.ticks_diff(time.ticks_ms(), self.last_trigger) > 0.12:
+            self.callback_rising(x)
+            self.t = time.ticks_ms()
+
+    def set_callback_rising(self, fn):
+        """Set the callback actions when the button has a rising edge
+        takes: `fn`: function with single argument of Pin object experiencing the edge.
+        """
+        self.callback_rising = fn
 
 class Buttons(object):
 
