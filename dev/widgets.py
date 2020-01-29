@@ -26,6 +26,18 @@ class Container(lv.cont):
         self.set_layout(lv.LAYOUT.PRETTY)
 
 
+class Label(lv.label):
+
+    def __init__(self, parent, text, width=None):
+        super().__init__(parent)
+        self.text = text
+        # Default to scrolling text if long
+        self.set_long_mode(lv.label.LONG.SROLL_CIRC)
+        self.set_width(width if width else parent.get_width()-10)
+        self.set_text(text)
+        self.set_align(lv.label.ALIGN.CENTER)
+
+
 class Button(lv.btn):
 
     def __init__(self, parent, x, y, width=None, height=None):
@@ -39,11 +51,7 @@ class Button(lv.btn):
         self.set_pos(x, y)
 
     def set_text(self, text):
-        label = lv.label(self)
-        label.set_long_mode(lv.label.LONG.SROLL_CIRC)
-        label.set_width(self.width-10)
-        label.set_text(text)
-        label.set_align(lv.label.ALIGN.CENTER)
+        self.label = Label(self, text, self.width-10)
 
     def click(self):
         self.toggle()
