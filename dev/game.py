@@ -6,19 +6,17 @@ class Sprite():
         self.height = height
         self.name = name
 
-
-
-
 class Game():
     def __init__(self, x,y,debugger=False):
         self.x = x
         self.y = y
         self.grid = []
         self.ids =["empty"]
+        self.sprites = []
         self.debugger = debugger
         #Can't use numpy :-(
         #Creates grid
-        self.grid = Game.make_grid(self.x,self.y)
+        self.grid = Game.make_grid(self.y,self.x)
     #Returns what is found at grid location
     def present_at(self,x,y):
         try:
@@ -48,7 +46,7 @@ class Game():
             self.insert_sprite(sprite)
             self.debug("added " + sprite.name + " at this location(" + str(x) + "," + str(y) + ")")
 
-    #scrolls grid in given direcion, can be set to roll over or not
+    #scrolls grid in given direcion, can be set to roll over or not  #TODO update sprites
     def move_all(self, direction, distance,roll_over=False, replace="empty"):
         direction = direction.upper()
         replace_id = self.get_id(replace)
@@ -57,11 +55,14 @@ class Game():
             self.ids.append(replace)
             replace_id = self.ids.index(replace)
 
-
         if direction == "LEFT":
             self.grid = Game.shift_grid(self.grid,"HOR", -distance,roll_over, replace_id)
+            for spr in self.sprites:
+                spr.x -= distance
         elif direction == "RIGHT":
             self.grid = Game.shift_grid(self.grid,"HOR", distance,roll_over,replace_id)
+            for spr in self.sprites:
+                spr.x i+= distance
 
     #Move one step
     def move_sprite(self, sprite, dx, dy, stop=True, replace="empty", roll_over=False, border=False, pass_through=False):
@@ -69,7 +70,6 @@ class Game():
         sprite_id = self.get_id(sprite.name)
         count_x = abs(dx)
         count_y = abs(dy)
-        
         try:
             sign_x = dx//count_x
         except: 
@@ -78,16 +78,12 @@ class Game():
             sign_y = dy//count_y
         except:
             sign_y = 0
-        
         for i in range(0, count_x):
             if border and (sprite.x + sprite.width + sign_x > self.x or sprite.x + sign_x  < 0):
                 break
             
-            #sprite.x += dx
-            #p = self.colision(sprite)
-            #sprite.x -= dx
-            #if p and pass_through == False:
-                #break
+            if (self.colision_edge(sprite,0,sign_x)):
+                break
             
             self.replace(sprite.x, sprite.y, sprite.x + sprite.width -1, sprite.y + sprite.height-1)
             self.move_sprite_axies(sprite, 0, sign_x)
@@ -95,18 +91,11 @@ class Game():
         for j in range(0,count_y):
             if border and (sprite.y + sprite.height + sign_y > self.y or sprite.y + sign_y  < 0):
                 break
-            
-            #sprite.y += dy
-            #p = self.colision(sprite)
-            #sprite.y -= dy
-            
-            #if p and pass_through == False:
-                #break
+            if (self.colision_edge(sprite,1,sign_y)):
+                break
             
             self.replace(sprite.x, sprite.y, sprite.x + sprite.width -1, sprite.y + sprite.height-1)
             self.move_sprite_axies(sprite, 1, sign_y)
-            print(count_y, j)
-
 
     def move_sprite_axies(self, sprite, axies, distance):
         sprite_id = self.get_id(sprite.name)
@@ -145,6 +134,34 @@ class Game():
                 if p != "empty":
                     return True
         return False
+
+    def colision_edge(self, sprite, axis, direction, distance=1):
+        if axis == 0:
+            if direction == 1:
+                for i in range(0,sprite.height):
+                    if self.collision_single_point((sprite.x+sprite.width-1+distance),sprite.y+i):
+                        return True
+            else:
+                for i in range(0,sprite.height):
+                    if self.collision_single_point(sprite.x+distance,sprite.y+i):
+                        return True
+
+        else:
+            if direction == 1:
+                for i in range(0,sprite.width):
+                    if self.collision_single_point(sprite.x+i,sprite.y+sprite.height-1+distance):
+                        return True
+            else:     
+                for i in range(0,sprite.width):
+                    if self.collision_single_point(sprite.x + i,sprite.y+distance):
+                        return True
+
+        return False
+    def collision_single_point(self,x,y, item=0,border=False):
+        try:
+            return self.grid[x][y] != 0
+        except:
+            return border
 
     ################### Helper functions ################################################
     def make_grid(x,y,fill=0):
@@ -196,4 +213,4 @@ class Game():
         for i in range(sprite.x, sprite.width + sprite.x):
             for j in range(sprite.y, sprite.height + sprite.y):
                 self.grid[i][j] = id
-                print(self.grid[i][j])
+        self.sprites.append(sprite)
