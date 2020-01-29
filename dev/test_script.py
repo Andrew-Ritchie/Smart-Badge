@@ -8,9 +8,9 @@ pebble = g.Sprite("pebble", 2 , 2)
 fish = g.Sprite("fish")
 
 r.print()
-r.add_sprite(rock1, 2,1)
-r.print()
+r.add_sprite(rock1, 2,0)
 r.add_sprite(rock2, 4,3)
 r.print()
-r.move_sprite(rock1,2, 2)
+r.move_sprite(rock1,2,2)
 r.print()
+
