@@ -17,6 +17,15 @@ from machine import Pin
 # RIGHT_M = lv.ALIGN.IN_RIGHT_MID
 
 
+class Container(lv.cont):
+
+    def __init__(self, parent):
+        super().__init__(parent)
+        self.set_auto_realign(True)
+        self.set_fit(lv.FIT.FLOOD)
+        self.set_layout(lv.LAYOUT.PRETTY)
+
+
 class Button(lv.btn):
 
     def __init__(self, parent, x, y, width=None, height=None):
