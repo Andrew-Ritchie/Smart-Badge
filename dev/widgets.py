@@ -84,12 +84,14 @@ class Line(lv.line):
             self.set_line_points(points)
 
     def format(self, points):
-        # Takes in the form:
-        #       points = [(x1,y1),(x2,y2),(x3,y3)...]
-        # And returns in the form:
-        #       points = [{"x": x1, "y": y1},
-        #                   {"x": x2, "y": y2},
-        #                   {"x": x3, "y": y3} ... ]
+        """ Reformats an array
+            Takes:
+                points = [(x1,y1),(x2,y2),(x3,y3)...]
+            Returns:
+                points = [{"x": x1, "y": y1},
+                            {"x": x2, "y": y2},
+                            {"x": x3, "y": y3} ... ]
+        """
         return [{"x": x, "y": y} for (x, y) in points]
 
     def create_style(self, colour=(0x00, 0x3b, 0x75), width=3, rounded=1):
@@ -124,7 +126,8 @@ class Bar(lv.bar):
         self.set_anim_time(time)
 
     def set_value_animation(self, value, anim):
-        # Set anim=True to have an animation and False for static
+        """ Set anim=True to have an animation and False for static
+        """
         self.set_value(value, lv.ANIM.ON if anim else lv.ANIM.OFF)
 
 
