@@ -1,19 +1,12 @@
 import lvgl as lv
-from micropython import const
-from ili9341 import ili9341
+from display import Display
 from widgets import *
 
 # Initialise LittlevGL
 lv.init()
 
-# Initialise and register the display
-# Registering is handled automatically by this contructor
-# Change 'rot' parameter to edit rotation
-disp = ili9341(miso=5, mosi=18, clk=19, cs=22,
-               dc=4, rst=21, backlight=2, width=160,
-               height=128, backlight_on=1, power=23,
-               power_on=1, rot=const(0xb0), invert=False, mhz=30, colormode=ili9341.COLOR_MODE_RGB)
-
+# Initialise communication to display
+disp = Display()
 
 # Create a screen
 scr = lv.obj()
