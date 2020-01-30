@@ -1,8 +1,4 @@
 import lvgl as lv
-from micropython import const
-from ili9341 import ili9341
-import time
-from machine import Pin
 
 # TODO: Figure out best way to use constants for this
 # Alignment options:
