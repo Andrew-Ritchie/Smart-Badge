@@ -5,7 +5,7 @@ Group 2 - Smart Badge Firmware
 ```
 smart_badge/
   display/
-    ili9341.py (display driver)
+    display.py (display driver)
   settings.json
   apps/
     name.py
