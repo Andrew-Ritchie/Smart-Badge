@@ -6,6 +6,7 @@ from ili9341 import ili9341
 from widgets import Button, TextArea, Line
 from machine import Pin, I2C
 import sensors
+import settings
 
 # Set up button input
 buttons = sensors.Buttons(up=27, down=33, left=25, right=12, a=35, b=26, x=34, y=32)
@@ -27,7 +28,7 @@ disp = ili9341(miso=5, mosi=18, clk=19, cs=22,
 # Create a screen
 scr = lv.obj()
 
-# TODO Once JSON branch is merged load settings here
+setngs = settings.Settings('settings.json')
 
 def main():
     temp_text = TextArea(scr, 0, 0, 160, 128)
