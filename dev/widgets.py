@@ -24,6 +24,15 @@ class Container(lv.cont):
         self.set_auto_realign(True)
         self.set_fit(lv.FIT.FLOOD)
         self.set_layout(lv.LAYOUT.PRETTY)
+        self.width = self.get_width()
+        self.half_width = self.width//2 - 13
+        self.third_width = self.width//3 - 10
+
+    def half(self):
+        return self.half_width
+
+    def third(self):
+        return self.third_width
 
 
 class Label(lv.label):
@@ -37,21 +46,29 @@ class Label(lv.label):
         self.set_text(text)
         self.set_align(lv.label.ALIGN.CENTER)
 
+    def update_text(self, text):
+        self.set_text(text)
+
 
 class Button(lv.btn):
 
-    def __init__(self, parent, x, y, width=None, height=None):
+    def __init__(self, parent, text=None, x=0, y=0, width=None, height=None):
         super().__init__(parent)
         self.x = x
         self.y = y
-        self.width = width
-        self.height = height
-        if width and height:
-            self.set_size(self.width, self.height)
+        self.width = width if width else parent.get_width()-10
+        self.height = height if height else 25
+        self.set_size(self.width, self.height)
         self.set_pos(x, y)
+        self.label = None
+        if text:
+            self.set_text(text)
 
     def set_text(self, text):
-        self.label = Label(self, text, self.width-10)
+        if self.label:
+            self.label.set_text(text)
+        else:
+            self.label = Label(self, text, self.width-10)
 
     def click(self):
         self.toggle()
