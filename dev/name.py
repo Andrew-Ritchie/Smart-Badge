@@ -17,9 +17,6 @@ class NameApp(app.App):
         self.add_item("nickname", Label(self.cont, nick, font_size=28))
         self.add_item("lastname", Label(self.cont, last))
 
-    def load_app(self):
-        self.load_screen()
-
     def get_name(self):
         settings = Settings("settings.json")
         return settings.get_str_name_and_nickname().split(" ")

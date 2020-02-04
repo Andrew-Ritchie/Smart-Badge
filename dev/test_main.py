@@ -18,9 +18,9 @@ apps["name"] = NameApp(disp)
 
 
 def main():
-    apps["name"].load_app()
+    apps["name"].load_screen()
     time.sleep_ms(10000)
-    apps['main_menu'].load_app()
+    apps['main_menu'].load_screen()
 
 
 main()

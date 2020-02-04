@@ -14,6 +14,3 @@ class MainMenuApp(app.App):
         self.add_item("maze_game", Button(self.cont, text="Maze Game", width=self.cont.half()))
         self.add_item("pong", Button(self.cont, text="Pong"))
         self.add_item("name", Button(self.cont, text="Name"))
-
-    def load_app(self):
-        self.load_screen()
