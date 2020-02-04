@@ -8,6 +8,7 @@ class App():
 
     def __init__(self, name, display, th=NIGHT_THEME):
         self.theme = th
+        self.group = lv.group_create()
         lv.theme_set_current(self.theme)
         self.scr = lv.obj()
         self.name = name
@@ -21,8 +22,10 @@ class App():
     def load_screen(self):
         lv.scr_load(self.scr)
 
-    def add_item(self, name, item):
+    def add_item(self, name, item, selectable=False):
         self.items[name] = item
+        if selectable:
+            lv.group_add_obj(self.group, item)
 
     def get_cont(self):
         return self.cont

@@ -10,7 +10,7 @@ class MainMenuApp(app.App):
         self.set_title("Welcome to SmartBadge!", font_size=28)
         self.cont = self.get_cont()
 
-        self.add_item("timetable", Button(self.cont, text="Timetable", width=self.cont.half()))
-        self.add_item("maze_game", Button(self.cont, text="Maze Game", width=self.cont.half()))
-        self.add_item("pong", Button(self.cont, text="Pong"))
-        self.add_item("name", Button(self.cont, text="Name"))
+        self.add_item("timetable", Button(self.cont, text="Timetable", width=self.cont.half()), selectable=True)
+        self.add_item("maze_game", Button(self.cont, text="Maze Game", width=self.cont.half()), selectable=True)
+        self.add_item("pong", Button(self.cont, text="Pong"), selectable=True)
+        self.add_item("name", Button(self.cont, text="Name"), selectable=True)
