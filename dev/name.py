@@ -7,15 +7,15 @@ import app
 class NameApp(app.App):
 
     def __init__(self, disp):
-        th = lv.theme_night_init(210, lv.font_roboto_28)
-        super().__init__(name="Name", display=disp, th=th)
+        super().__init__(name="Name", display=disp)
         self.cont = self.get_cont()
+        self.cont.set_center()
 
         first, nick, last = self.get_name()
 
-        self.add_item(Label(self.cont, first))
-        self.add_item(Label(self.cont, nick))
-        self.add_item(Label(self.cont, last))
+        self.add_item("firstname", Label(self.cont, first))
+        self.add_item("nickname", Label(self.cont, nick, font_size=28))
+        self.add_item("lastname", Label(self.cont, last))
 
     def load_app(self):
         self.load_screen()
