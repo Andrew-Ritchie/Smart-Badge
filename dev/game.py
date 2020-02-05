@@ -25,14 +25,14 @@ class Game():
         self.grid = grid
         self.ids = ids
         self.sprites = sprites
-    
+
     #Updates entire grid with new grid
     def update_grid(grid):
         self.grid = grid
     #Adds new sprite id(string)
     def add_id(ID):
         self.ids.append(ID)
-   
+
     #Checks what is at a given coord
     def present_at(self,x,y):
         try:
@@ -62,7 +62,7 @@ class Game():
             self._insert_sprite(sprite)
             self._debug("added {sprite_name} at this location({x},{y})".format(x=str(x), y=str(y), sprite_name=sprite.name))
 
-    
+
     #Removes sprite from list and coord
     def remove_sprite(sprite, replace = "empty"):
         self.sprites.remove(sprite)
@@ -95,7 +95,7 @@ class Game():
         count_y = abs(dy)
         try:
             sign_x = dx//count_x
-        except: 
+        except:
             sign_x = 0
         try:
             sign_y = dy//count_y
@@ -104,16 +104,17 @@ class Game():
         for i in range(0, count_x):
             if (self.collision_edge(sprite,0,sign_x)):
                 break
-            
+
             self.replace(sprite.x, sprite.y, sprite.x + sprite.width -1, sprite.y + sprite.height-1)
             self.move_sprite_axis(sprite, 0, sign_x)
-        
+
         for j in range(0,count_y):
             if (self.collision_edge(sprite,1,sign_y)):
                 break
-            
+
             self.replace(sprite.x, sprite.y, sprite.x + sprite.width -1, sprite.y + sprite.height-1)
             self.move_sprite_axis(sprite, 1, sign_y)
+
     
     #Move sprite along given axis
     def move_sprite_axis(self, sprite, axies, distance,border=False):
@@ -138,7 +139,7 @@ class Game():
                     else:
                         self.grid[i+distance][j] = sprite_id
             sprite.y +=distance
-    
+
     #Replaces ids at given coords
     def replace(self, x,y, dx, dy, name="empty"):
         replace_id = self._get_id(name)
@@ -150,7 +151,7 @@ class Game():
                 if j >= self.y:
                     break
                 self.grid[j][i] = replace_id
-    
+
     #Detects is sprite is occupying location of another sprite
     def collision(self, sprite):
         for i in range(sprite.x,sprite.width + sprite.x):
@@ -159,7 +160,7 @@ class Game():
                 if p != "empty":
                     return True
         return False
-    
+
     #Checks if given edge of sprite will collide with an object when it moves
     def collision_edge(self, sprite, axis, direction, distance=1):
         if axis == 0:
@@ -177,20 +178,20 @@ class Game():
                 for i in range(0,sprite.width):
                     if self.collision_single_point(sprite.x+i,sprite.y+sprite.height-1+distance):
                         return True
-            else:     
+            else:
                 for i in range(0,sprite.width):
                     if self.collision_single_point(sprite.x + i,sprite.y-distance):
                         return True
 
         return False
-    
+
     #Checks if anything would collide at given point
     def collision_single_point(self,x,y, item=0,border=False):
         try:
             return self.grid[y][x] != 0
         except:
             return border
-    
+
     #Prints grid
     def print(self):
         print("[")
@@ -209,8 +210,8 @@ class Game():
                 row.append(fill)
             grid.append(row)
         return grid
-    
-    #Moves all element in grid in given direction 
+
+    #Moves all element in grid in given direction
     def _shift_grid(grid, direction, distance,roll_over,replace):
         len_x = len(grid)
         len_y = len(grid[0])
@@ -227,7 +228,7 @@ class Game():
                         row[(j+distance)%len_x] = grid[i][j]
                 grid[i] = row
         return grid
-    
+
     #Returns id of sprite or creates new id for sprite
     def _get_id(self, item):
         try:
@@ -235,12 +236,12 @@ class Game():
         except:
             self._debug("ID not found, adding new one")
             return None
-    
+
     #Prints to terminal if set to true
     def _debug(self, sentence):
         if self.debugger:
             print(sentence)
-    
+
     #Adds sets grid coords to sprite id
     def _insert_sprite(self, sprite):
         id = self.ids.index(sprite.name)
