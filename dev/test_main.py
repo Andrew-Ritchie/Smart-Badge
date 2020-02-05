@@ -20,18 +20,20 @@ buttons = sensors.Buttons(up=27, down=33, left=25, right=12, a=35, b=26, x=34, y
 curr_group = apps["main_menu"].group
 
 def go_next(x):
+    global curr_group        
     lv.group_focus_next(curr_group)
 
 def go_prev(x):
+    global curr_group        
     lv.group_focus_prev(curr_group)
 
 buttons.right.set_callback_edge(go_next)
 buttons.left.set_callback_edge(go_prev)
 
 def main():
+    global curr_group
     apps['main_menu'].load_screen()
-    # time.sleep_ms(10000)
-    # apps["name"].load_screen()
+    time.sleep_ms(10000)
 
 main()
 
