@@ -86,8 +86,9 @@ class GameApp():
         rec = 0
         for i in range(spr.width):
            for j in range(spr.height):
-                sprite_rects[rec].change_points(x*5, y*4, (x*5)+5, (y*4)+4)
+                sprite_rects[rec].change_points((x+i)*5, (y+j)*4, ((x+i)*5)+5, ((y+j)*4)+4)
                 rec += 1
                 
-    def add_item(self, name, item):        
+    def add_item(self, name, item):
+        print("added item")
         self.sprites_widget[name].append(item)        
