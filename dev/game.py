@@ -115,7 +115,7 @@ class Game():
             self.replace(sprite.x, sprite.y, sprite.x + sprite.width -1, sprite.y + sprite.height-1)
             self.move_sprite_axis(sprite, 1, sign_y)
 
-    
+
     #Move sprite along given axis
     def move_sprite_axis(self, sprite, axies, distance,border=False):
         sprite_id = self._get_id(sprite.name)
