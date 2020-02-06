@@ -33,69 +33,71 @@ class Container(lv.cont):
     def set_center(self):
         self.set_layout(lv.LAYOUT.CENTER)
 
-class Label(lv.label):
+class Label():
 
-    def __init__(self, parent, text, width=None, font_size=None):
-        super().__init__(parent)
+    def __init__(self, parent, text, width=None, font_size=None):        
+        self.lv_obj = lv.label(parent)        
         if font_size:
             self._set_font_size(font_size)
         self.text = text
-        # Default to scrolling text if long
-        self.set_long_mode(lv.label.LONG.SROLL_CIRC)
-        self.set_width(width if width else parent.get_width()-10)
-        self.set_text(text)
-        self.set_align(lv.label.ALIGN.CENTER)
+        # Default to scrolling text if long        
+        self.lv_obj.set_long_mode(lv.label.LONG.SROLL_CIRC)        
+        self.lv_obj.set_width(width if width else parent.get_width()-10)        
+        self.lv_obj.set_text(self.text)        
+        self.lv_obj.set_align(lv.label.ALIGN.CENTER)        
 
     def update_text(self, text):
-        self.set_text(text)
+        self.lv_obj.set_text(text)
 
     def _set_font_size(self, font_size):
         style = lv.style_t()       
-        lv.style_copy(style, self.get_style(lv.label.STYLE.MAIN))
+        lv.style_copy(style, self.lv_obj.get_style(lv.label.STYLE.MAIN))
         if font_size == 28:
             style.text.font = lv.font_roboto_28
-        self.set_style(lv.label.STYLE.MAIN, style)
+        self.lv_obj.set_style(lv.label.STYLE.MAIN, style)
 
 
-class Button(lv.btn):
+class Button():
 
-    def __init__(self, parent, text=None, font_size=None, x=0, y=0, width=None, height=None):
-        super().__init__(parent)
+    def __init__(self, parent, text=None, font_size=None, x=0, y=0, width=None, height=None, app=None):        
+        self.lv_obj = lv.btn(parent)
+        self.parent = parent
         self.x = x
         self.y = y
         self.width = width if width else parent.get_width()-10
         self.height = height if height else 25
-        self.set_size(self.width, self.height)
-        self.set_pos(x, y)
+        self.lv_obj.set_size(self.width, self.height)
+        self.lv_obj.set_pos(x, y)        
         self.label = None
         if text:
             self.set_text(text, font_size)
+        if app:
+            self.app_name = app
 
-    def set_text(self, text, font_size):
-        if self.label:
-            self.label.set_text(text)
+    def set_text(self, text, font_size):        
+        if self.label:         
+            self.label.lv_obj.set_text(text)
         else:
-            self.label = Label(self, text, self.width-10, font_size)
+            self.label = Label(self.lv_obj, text, self.width-10, font_size)
 
     def click(self):
         self.toggle()
 
-
-class TextArea(lv.ta):
+class TextArea():
 
     def __init__(self, parent, x, y, width, height):
-        super().__init__(parent)
+        self.lv_obj = lv.ta(parent)
         self.x = x
         self.y = y
         self.width = width
         self.height = height
-        self.set_size(self.width, self.height)
-        self.set_pos(x, y)
-        self.set_cursor_type(lv.CURSOR.NONE)
+        self.lv_obj.set_size(self.width, self.height)
+        self.lv_obj.set_pos(x, y)
+        self.lv_obj.set_cursor_type(lv.CURSOR.NONE)
 
     def set_text_content(self, text):
-        self.set_text_align(lv.label.ALIGN.CENTER)
-        self.set_text(text)
+        self.lv_obj.set_text_align(lv.label.ALIGN.CENTER)
+        self.lv_obj.set_text(text)
 
 
 class Line(lv.line):
