@@ -13,9 +13,9 @@ class NameApp(app.App):
 
         first, nick, last = self.get_name()
 
-        self.add_item("firstname", Label(self.cont, first))
-        self.add_item("nickname", Label(self.cont, nick, font_size=28))
-        self.add_item("lastname", Label(self.cont, last))
+        self.add_item("firstname", Label(self.cont, first), selectable=True)
+        self.add_item("nickname", Label(self.cont, nick, font_size=28), selectable=True)
+        self.add_item("lastname", Label(self.cont, last), selectable=True)
 
     def get_name(self):
         settings = Settings("settings.json")
