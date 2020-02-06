@@ -1,25 +1,12 @@
-import game as g
 
-ball = g.Sprite("ball")
-v_wall = g.Sprite("v-wall", 3,1)
-h_wall = g.Sprite("h-wall",1,3)
+import lvgl as lv
+from display import Display
+from maze import MazeApp
 
-scrn = g.Game(20,20)
+# Initialise LittlevGL -- for display
+lv.init()
 
-scrn.add_sprite(ball,10,10)
+# Initialise and register the display
+disp = Display()
 
-scrn.add_sprite(v_wall,7,10)
-scrn.add_sprite(h_wall,12,12)
-
-scrn.print()
-
-scrn.move_sprite(ball, 1,1)
-
-scrn.print()
-
-scrn.move_sprite(ball, 1,1)
-
-scrn.print()
-
-scrn.move_sprite(ball, 1,1)
-
+maze_app = MazeApp(disp)
