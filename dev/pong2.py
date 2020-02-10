@@ -8,7 +8,7 @@ class Ball(g.Sprite):
 
     #Call the parent class constructor
     def __init__(self):
-        super().__init__("ball")
+        super().__init__("ball",2,2)
 
         #set spesific parameters
         self.direction = [0,0]
@@ -55,7 +55,7 @@ class Ball(g.Sprite):
 
 class Player(g.Sprite):
     def __init__(self):
-        super().__init__("Player", 1, 2)
+        super().__init__("Player", 1, 5)
 
     def update(self, dir):
         while True:  # making a loop
@@ -92,12 +92,12 @@ class PongApp(app.GameApp):
         player1 = Player()
         player2 = Player()
         ball = Ball()
-        wall = g.Sprite("wall", 6, 1)
-        self.add_sprite(player1, 0,2)
-        self.add_sprite(player2, 5,2)
-        self.add_sprite(ball, 1,2)
-        self.add_sprite(wall, 0,0)
-        self.add_sprite(wall, 0,5)
+        wall = g.Sprite("wall", 32, 1)
+        self.add_custom_sprite(player1, 0,16)
+        self.add_custom_sprite(player2, 31,16)
+        self.add_custom_sprite(ball, 1,2)
+        self.add_custom_sprite(wall, 0,0)
+        self.add_custom_sprite(wall, 0,31)
 
     def main():
         while not False:
