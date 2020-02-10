@@ -38,7 +38,7 @@ class App():
 
 class GameApp():
 
-    def __init__(self, name, display, th=MATERIAL_THEME):
+    def __init__(self, name, display, th=MATERIAL_THEME,roll_over=False,border=False,kill=False):
         self.theme = th        
         lv.theme_set_current(self.theme)
         self.scr = lv.obj()
@@ -47,10 +47,14 @@ class GameApp():
         self.game = g.Game(32,32)
         self.sprites = {}
         self.sprites_widget = {}
+        self.roll_over = roll_over
+        self.border = border
+        self.kill = kill
         for k in self.sprites:
             self.sprites_widget[k] = []
         self.load_screen()
         self.draw_screen()
+
 
     def load_screen(self):
         lv.scr_load(self.scr)
@@ -79,9 +83,12 @@ class GameApp():
     def move_sprite(self, sprite_id, dx, dy):
         sprite_rects = self.sprites_widget[sprite_id]
         spr = self.sprites[sprite_id]
-        self.game.move_sprite(spr, dx,dy)
+        killed = self.game.move_sprite(spr, dx,dy,roll_over=self.roll_over, border=self.border, kill=self.kill)
         x = spr.x
         y = spr.y
+
+        if killed:
+            return None
         
         rec = 0
         for i in range(spr.width):
