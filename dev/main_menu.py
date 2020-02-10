@@ -1,27 +1,16 @@
 import lvgl as lv
-from display import Display
 from widgets import *
+import app
 
-# Initialise LittlevGL
-lv.init()
 
-# Initialise communication to display
-disp = Display()
+class MainMenuApp(app.App):
 
-# Create a screen
-scr = lv.obj()
-max_width = scr.get_width()-10
-
-th = lv.theme_night_init(210, lv.font_roboto_16)
-lv.theme_set_current(th)
-
-cont = Container(scr)
-
-title_text = Label(cont, "Main Menu")
-
-timetable = Button(cont, text="Timetable")
-maze_game = Button(cont, text="Maze Game", width=cont.half())
-pong = Button(cont, text="Pong", width=cont.half())
-about = Button(cont, text="About")
-
-lv.scr_load(scr)
+    def __init__(self, disp):
+        super().__init__(name="Main Menu", display=disp)
+        self.set_title("Welcome to SmartBadge!", font_size=28)
+        self.cont = self.get_cont()
+        
+        self.add_item("timetable", Button(self.cont, text="Timetable", width=self.cont.half(), app="timetable"), selectable=True)
+        self.add_item("maze_game", Button(self.cont, text="Maze Game", width=self.cont.half(), app="maze_game"), selectable=True)
+        self.add_item("pong", Button(self.cont, text="Pong", width=self.cont.half(), app="pong"), selectable=True)
+        self.add_item("name", Button(self.cont, text="Name", width=self.cont.half(), app="name"), selectable=True)

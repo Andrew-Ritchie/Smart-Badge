@@ -88,7 +88,7 @@ class Game():
                 spr.x += distance
 
     #Move one sprite, given distance, currently goes 1 step at a time, may want to update this?
-    def move_sprite(self, sprite, dx, dy, stop=True, replace="empty", roll_over=False, pass_through=False):
+    def move_sprite(self, sprite, dx, dy, stop=True, replace="empty", roll_over=False, kill=False,border = False):
         replace_id = self._get_id(replace)
         sprite_id = self._get_id(sprite.name)
         count_x = abs(dx)
@@ -105,27 +105,63 @@ class Game():
             if (self.collision_edge(sprite,0,sign_x)):
                 break
 
+            if border:
+                if sprite.x+sprite.width == self.x and sign_x > 0:
+                    break
+                elif sprite.x == 0 and sign_x < 0:
+                    break
+            if kill:
+                if sprite.x > self.x:
+                    return True
+                elif (sprite.x + sprite.width) < 0:
+                    return True
+
             self.replace(sprite.x, sprite.y, sprite.x + sprite.width -1, sprite.y + sprite.height-1)
             self.move_sprite_axis(sprite, 0, sign_x)
+
+            if roll_over:
+                if sprite.x > self.x:
+                    sprite.x = 0
+                    self.move_sprite_axis(sprite, 0, 0)
+                elif (sprite.x + sprite.width) < 0:
+                    sprite.x = self.x-sprite.width
+                    self.move_sprite_axis(sprite, 0, 0)
 
         for j in range(0,count_y):
             if (self.collision_edge(sprite,1,sign_y)):
                 break
 
+            if border:
+                if sprite.y+sprite.height == self.y and sign_y > 0:
+                    break
+                elif sprite.y == 0 and sign_y < 0:
+                    break
+            if kill:
+                if sprite.y > self.y:
+                    return True
+                elif sprite.y + sprite.height < 0:
+                    return True
+
             self.replace(sprite.x, sprite.y, sprite.x + sprite.width -1, sprite.y + sprite.height-1)
             self.move_sprite_axis(sprite, 1, sign_y)
 
+            if roll_over:
+                if sprite.y > self.y:
+                    sprite.y = 0
+                    self.move_sprite_axis(sprite, 1, 0)
+                elif sprite.y + sprite.height < 0:
+                    sprite.y = self.y-sprite.height
+                    self.move_sprite_axis(sprite, 1, 0)
+        return False
 
     #Move sprite along given axis
-    def move_sprite_axis(self, sprite, axies, distance,border=False):
+    def move_sprite_axis(self, sprite, axies, distance):
         sprite_id = self._get_id(sprite.name)
         if axies == 0:
             for i in range(sprite.y, sprite.y + sprite.height):
                 for j in range(sprite.x, sprite.x + sprite.width):
                     if j + distance  >= self.x or j + distance < 0 or i >= self.y or i < 0:
                         self._debug("going off screen")
-                        if border:
-                            return
                     else:
                         self.grid[i][j+distance] = sprite_id
             sprite.x +=distance
@@ -134,8 +170,6 @@ class Game():
                 for j in range(sprite.x, sprite.x + sprite.width):
                     if i + distance  >= self.y or i + distance < 0 or j >= self.x or j < 0:
                         self._debug("going off screen")
-                        if border:
-                            return
                     else:
                         self.grid[i+distance][j] = sprite_id
             sprite.y +=distance
