@@ -74,19 +74,19 @@ class GameApp():
            for j in range(sprite.height):
                    self.add_item(sprite.name, Rectangle(self.scr, (x+i)*5, (y+j)*4, ((x+i)*5)+5, ((y+j)*4)+4))                    
         
-    def __add_spr(self,pr,x,y)    
-        self.sprites[name] = spr
-        self.sprites_widget[name] = []
+    def __add_spr(self,spr,x,y):    
+        self.sprites[spr.name] = spr
+        self.sprites_widget[spr.name] = []
         self.game.add_sprite(spr,x,y)
         self.draw_initial_sprite(spr)
 
     def add_sprite(self,name,x,y,width=1,height=1):
         spr = g.Sprite(name,width,height)
-        self.__add_spr(self,pr,x,y)    
+        self.__add_spr(spr,x,y)    
     
     def add_custom_sprite(self,sprite,x,y):
         spr = sprite 
-        self.__add_spr(self,pr,x,y)    
+        self.__add_spr(spr,x,y)    
     
     def move_sprite(self, sprite_id, dx, dy):
         sprite_rects = self.sprites_widget[sprite_id]
