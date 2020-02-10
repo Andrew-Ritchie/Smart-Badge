@@ -88,7 +88,9 @@ class GameApp():
         y = spr.y
 
         if killed:
-            return None
+            del self.sprites[sprite_id]
+            de; self.sprites_widget[sprite_id]
+            return (spr.name, sprite_id)
         
         rec = 0
         for i in range(spr.width):
