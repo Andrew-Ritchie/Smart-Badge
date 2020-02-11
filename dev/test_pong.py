@@ -13,20 +13,21 @@ pong_app = PongApp(disp)
 
 buttons = sensors.Buttons(up=27, down=33, left=25, right=12, a=35, b=26, x=34, y=32)
 
-# def go_up(x):
-#     maze_app.move_sprite("ball",1,0)
-# def go_down(x):
-#     maze_app.move_sprite("ball",-1,0)
-# def go_left(x):
-#     maze_app.move_sprite("ball",0,-1)
-# def go_right(x):
-#     maze_app.move_sprite("ball",0,1)
+def go_up(x):
+     pong_app.move_sprite("Player1",0,1)
+def go_down(x):
+     pong_app.move_sprite("Player1",0,-1)
+def go_left(x):
+     pong_app.move_sprite("Player2",0,1)
+def go_right(x):
+     pong_app.move_sprite("Player2",0,-1)
 
-# buttons.up.set_callback_edge(go_up)
-# buttons.down.set_callback_edge(go_down)
-# buttons.left.set_callback_edge(go_left)
-# buttons.right.set_callback_edge(go_right)
+buttons.up.set_callback_edge(go_up)
+buttons.down.set_callback_edge(go_down)
+buttons.a.set_callback_edge(go_left)
+buttons.b.set_callback_edge(go_right)
 
-pong_app.run_ball()
-#while True:
-    #time.sleep_ms(1)
+while True:
+    print(".", end = "")
+    pong_app.move_ball()
+    time.sleep_ms(1)

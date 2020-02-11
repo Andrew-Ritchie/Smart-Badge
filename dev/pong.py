@@ -20,42 +20,9 @@ class Ball(g.Sprite):
         #make this random
         self.direction = [1,1]
 
-    def bounce(self, grid):
-        #bounce off player
-        print("direction", self.direction)
-        print(self.direction[0] + 10)
-        print("coords x:", self.x)
-        print("coords y:", self.y)
-        print(grid[self.x + self.direction[0]][self.y + self.direction[1]])
-        if grid[self.x + self.direction[0]][self.y + self.direction[1]] == 1:
-            print("oioi")
-            if self.direction[0] == 1:
-                self.direction[0] = -1
-            else:
-                self.direction[0] = 1
-
-            if self.direction[1] == 1:
-                self.direction[1] = -1
-            else:
-                self.direction[1] = 1
-
-
-        #bounce off wall
-        if grid[self.x + self.direction[0]][self.y + self.direction[1]] == 3:
-            print("hellooooo")
-
-
-            if self.direction[0] == 1:
-                self.direction[0] = -1
-            else:
-                self.direction[0] = 1
-
-
-
-
 class Player(g.Sprite):
-    def __init__(self):
-        super().__init__("Player", 1, 5)
+    def __init__(self,name = "Player"):
+        super().__init__(name, 1, 5)
 
     def update(self, dir):
         while True:  # making a loop
@@ -67,18 +34,10 @@ class Player(g.Sprite):
                 break
             except:
                 break  # if user pressed a key other than the given key the loop will break
+
 class Wall(g.Sprite):
     def __init__(self):
         super().__init__(self, "Wall", 1, 2)
-
-#helper function
-def pong_wait(length_of_time):
-    inital = t.time()
-
-    x = False
-    while(not(x)):
-        current = t.time()
-        x = (current - inital) > length_of_time
 
 
 class PongApp(app.GameApp):
@@ -89,21 +48,36 @@ class PongApp(app.GameApp):
         score1 = 0
         score2 = 0
 
-        player1 = Player()
-        player2 = Player()
+        player1 = Player("Player1")
+        player2 = Player("Player2")
         self.ball = Ball()
         wall = g.Sprite("wall", 32, 1)
         self.add_custom_sprite(player1, 0,16)
         self.add_custom_sprite(player2, 31,16)
-        self.add_custom_sprite(self.ball, 1,2)
+        self.add_custom_sprite(self.ball, 16,16)
         self.add_custom_sprite(wall, 0,0)
         self.add_custom_sprite(wall, 0,31)
+    
+    #helper function
+    def pong_wait(self,length_of_time):
+        inital = t.time()
 
-    def run_ball(self):
-        while True:
-            #Ball.bounce(ball, self.game.grid)
-            print("here")
-            self.move_sprite("ball", self.ball.direction[0],self.ball.direction[1])
-            print("there")
-            #Ball.bounce(ball, self.game.grid)
-            pong_wait(2)
+        x = False
+        while(not(x)):
+            current = t.time()
+            x = (current - inital) > length_of_time
+
+    def bounce_ball(self):
+        if self.game.collision_edge(self.ball,0,1):
+            self.ball.direction[0] = -1
+        elif self.game.collision_edge(self.ball,0,-1):
+            self.ball.direction[0] = 1
+        if self.game.collision_edge(self.ball,1,1):
+            self.ball.direction[1] = -1
+        elif self.game.collision_edge(self.ball,1,-1):
+            self.ball.direction[1] = 1
+
+    def move_ball(self):
+        self.bounce_ball()
+        self.move_sprite("ball", self.ball.direction[0],self.ball.direction[1])
+        self.pong_wait(0.5)
