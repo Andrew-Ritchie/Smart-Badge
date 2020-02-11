@@ -60,15 +60,20 @@ class GameApp():
         # 5 x 4 for each element in grid
         for x in range(self.game.x):
             for y in range(self.game.y):
-                if self.game.present_at(x,y) != "empty":
-                    Rectangle(self.scr, x*5, y*4, (x*5)+5, (y*4)+4)                    
+                if self.game.present_at(x,y) == "ball":
+                    # Rectangle(self.scr, x*5, y*4, (x*5)+5, (y*4)+4)
+                    Ball(self.scr, 10*5, 10*4, x*5, y*4)
     
     def draw_initial_sprite(self,sprite):
         x = sprite.x
         y = sprite.y
-        for i in range(sprite.width):
-           for j in range(sprite.height):
-                   self.add_item(sprite.name, Rectangle(self.scr, (x+i)*5, (y+j)*4, ((x+i)*5)+5, ((y+j)*4)+4))                    
+        width = sprite.width
+        height = sprite.height
+        self.add_item(sprite.name, Ball(self.scr, width*5 ,height*4, (x)*5, (y)*4))
+        # for i in range(sprite.width):
+        #    for j in range(sprite.height):
+        #            self.add_item(sprite.name, Ball(self.scr, 50,40, (x+i)*5, (y+j)*4))
+    
     def add_sprite(self,name,x,y,width=1,height=1):
         spr = g.Sprite(name,width,height)
         self.sprites[name] = spr
@@ -84,10 +89,12 @@ class GameApp():
         y = spr.y
         
         rec = 0
-        for i in range(spr.width):
-           for j in range(spr.height):
-                sprite_rects[rec].change_points((x+i)*5, (y+j)*4, ((x+i)*5)+5, ((y+j)*4)+4)
-                rec += 1
+        sprite_rects[rec].move(x*5,y*4)
+        # for i in range(spr.width):
+        #    for j in range(spr.height):
+        #         # sprite_rects[rec].change_points((x+i)*5, (y+j)*4, ((x+i)*5)+5, ((y+j)*4)+4)
+        #         sprite_rects[rec].move((x+i)*5, (y+j)*4)
+        #         rec += 1
                 
     def add_item(self, name, item):
         print("added item")
