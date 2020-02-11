@@ -1,6 +1,6 @@
 import lvgl as lv
 from display import Display
-from pong2 import PongApp
+from pong import PongApp
 import time
 import sensors
 # Initialise LittlevGL -- for display
@@ -27,6 +27,6 @@ buttons = sensors.Buttons(up=27, down=33, left=25, right=12, a=35, b=26, x=34, y
 # buttons.left.set_callback_edge(go_left)
 # buttons.right.set_callback_edge(go_right)
 
-# pong_app.main()
-while True:
-    time.sleep_ms(1)
+pong_app.run_ball()
+#while True:
+    #time.sleep_ms(1)

@@ -1,13 +1,14 @@
+import lvgl as lv
+from widgets import *
+import app
 import game as g
 import time as t
-import random
-
 
 class Ball(g.Sprite):
 
     #Call the parent class constructor
     def __init__(self):
-        super().__init__("ball")
+        super().__init__("ball",2,2)
 
         #set spesific parameters
         self.direction = [0,0]
@@ -54,7 +55,7 @@ class Ball(g.Sprite):
 
 class Player(g.Sprite):
     def __init__(self):
-        super().__init__("Player", 1, 2)
+        super().__init__("Player", 1, 5)
 
     def update(self, dir):
         while True:  # making a loop
@@ -70,9 +71,8 @@ class Wall(g.Sprite):
     def __init__(self):
         super().__init__(self, "Wall", 1, 2)
 
-
 #helper function
-def wait(length_of_time):
+def pong_wait(length_of_time):
     inital = t.time()
 
     x = False
@@ -81,27 +81,29 @@ def wait(length_of_time):
         x = (current - inital) > length_of_time
 
 
+class PongApp(app.GameApp):
 
+    def __init__(self, disp):
 
-score1 = 0
-score2 = 0
+        super().__init__("Pong", disp)
+        score1 = 0
+        score2 = 0
 
-screen = g.Game(6,6, debugger = False)
-player1 = Player()
-player2 = Player()
-ball = Ball()
-wall = g.Sprite("wall", 32, 1)
-screen.add_sprite(player1, 0,16)
-screen.add_sprite(player2, 31,16)
-screen.add_sprite(ball, 1,2)
-screen.add_sprite(wall, 0,0)
-screen.add_sprite(wall, 0,32)
-exit_program = False
+        player1 = Player()
+        player2 = Player()
+        self.ball = Ball()
+        wall = g.Sprite("wall", 32, 1)
+        self.add_custom_sprite(player1, 0,16)
+        self.add_custom_sprite(player2, 31,16)
+        self.add_custom_sprite(self.ball, 1,2)
+        self.add_custom_sprite(wall, 0,0)
+        self.add_custom_sprite(wall, 0,31)
 
-screen.print()
-while not exit_program:
-    Ball.bounce(ball, screen.grid)
-    screen.move_sprite(ball, ball.direction[0],ball.direction[1])
-    Ball.bounce(ball, screen.grid)
-    screen.print()
-    wait(2)
+    def run_ball(self):
+        while True:
+            #Ball.bounce(ball, self.game.grid)
+            print("here")
+            self.move_sprite("ball", self.ball.direction[0],self.ball.direction[1])
+            print("there")
+            #Ball.bounce(ball, self.game.grid)
+            pong_wait(2)

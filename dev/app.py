@@ -107,5 +107,4 @@ class GameApp():
                 rec += 1
                 
     def add_item(self, name, item):
-        print("added item")
         self.sprites_widget[name].append(item)        
