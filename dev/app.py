@@ -102,17 +102,6 @@ class GameApp():
 
         if spr.type != None:
             spr.icon.move(x*5, y*4)
-        #rec = 0
-        # sprite_rects[rec].move(x*5, y*4)
-        # if spr.name == "ball":
-         #   sprite_rects[0].move(x*5, y*4)
-        # else:
-            # for i in range(spr.width):
-            #   for j in range(spr.height):
-            #      sprite_rects[rec].change_points(
-            #         (x+i)*5, (y+j)*4, ((x+i)*5)+5, ((y+j)*4)+4)
-            # sprite_rects[rec].move((x+i)*5, (y+j)*4)
-            #    rec += 1
 
     def sprite_wait(self, length_of_time):
         inital = t.time()
