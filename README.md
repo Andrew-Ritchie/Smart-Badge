@@ -1,5 +1,7 @@
 # Smart-Badge
-Group 2 - Smart Badge Firmware
+SmartBadge Firmware
+
+Please see the [project wiki](https://github.com/Andrew-Ritchie/Smart-Badge/wiki) for more information and guides.
 
 ## Filestructure
 ```
