@@ -66,8 +66,8 @@ class GameApp():
         for x in range(self.game.x):
             for y in range(self.game.y):
                 if self.game.present_at(x, y) == "ball":
-                    # Rectangle(self.scr, x*5, y*4, (x*5)+5, (y*4)+4)
-                    Ball(self.scr, 10*5, 10*4, x*5, y*4)
+                    Rectangle(self.scr, x*5, y*4, (x*5)+5, (y*4)+4)
+                    # Ball(self.scr, 10*5, 10*4, x*5, y*4)
 
     def draw_initial_sprite(self, sprite):
         x = sprite.x
@@ -77,11 +77,23 @@ class GameApp():
                 self.add_item(sprite.name, Rectangle(
                     self.scr, (x+i)*5, (y+j)*4, ((x+i)*5)+5, ((y+j)*4)+4))
 
+    def draw_initial_sprite_icon(self, sprite):
+        x = sprite.x
+        y = sprite.y
+        width = sprite.width
+        height = sprite.height
+        if sprite.name == "ball":
+            self.add_item(sprite.name, Ball(
+                self.scr, width*5, height*4, x*5, y*4))
+
     def __add_spr(self, spr, x, y):
         self.sprites[spr.name] = spr
         self.sprites_widget[spr.name] = []
         self.game.add_sprite(spr, x, y)
-        self.draw_initial_sprite(spr)
+        if spr.name == "ball":
+            self.draw_initial_sprite_icon(spr)
+        else:
+            self.draw_initial_sprite(spr)
 
     def add_sprite(self, name, x, y, width=1, height=1):
         spr = g.Sprite(name, width, height)
@@ -107,12 +119,15 @@ class GameApp():
 
         rec = 0
         # sprite_rects[rec].move(x*5, y*4)
-        for i in range(spr.width):
-            for j in range(spr.height):
-                sprite_rects[rec].change_points(
-                    (x+i)*5, (y+j)*4, ((x+i)*5)+5, ((y+j)*4)+4)
-                # sprite_rects[rec].move((x+i)*5, (y+j)*4)
-                rec += 1
+        if spr.name == "ball":
+            sprite_rects[0].move(x*5, y*4)
+        else:
+            for i in range(spr.width):
+                for j in range(spr.height):
+                    sprite_rects[rec].change_points(
+                        (x+i)*5, (y+j)*4, ((x+i)*5)+5, ((y+j)*4)+4)
+                    # sprite_rects[rec].move((x+i)*5, (y+j)*4)
+                    rec += 1
 
     def add_item(self, name, item):
         self.sprites_widget[name].append(item)
