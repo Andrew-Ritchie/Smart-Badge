@@ -239,3 +239,18 @@ class Image(lv.img):
 
     def centralise(self):
         self.align(None, lv.ALIGN.CENTER, 0, 0)
+
+class Circle(lv.obj):
+
+    def __init__(self, parent, width, height, x, y):
+        super().__init__(parent)
+        self.set_size(width,height)
+        self.set_pos(x,y)
+
+        self.circle_style = lv.style_t()
+        lv.style_copy(self.circle_style, lv.style_plain)
+        self.circle_style.body.radius = lv.RADIUS.CIRCLE
+        self.set_style(self.circle_style)
+
+    def move(self, x, y):
+        self.set_pos(x, y)
