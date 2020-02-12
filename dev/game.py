@@ -233,7 +233,6 @@ class Game():
             print(self.grid[i])
         print("]")
 
-
     ################### Helper functions ################################################
     #Makes array of arrays
     def _make_grid(x,y,fill=0):

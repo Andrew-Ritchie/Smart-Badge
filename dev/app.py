@@ -3,7 +3,7 @@ from display import Display
 from widgets import *
 from icons import *
 import game as g
-
+import time as t
 NIGHT_THEME = lv.theme_night_init(210, lv.font_roboto_16)
 DEFAULT_THEME = lv.theme_default_init(210, lv.font_roboto_16)
 MATERIAL_THEME = lv.theme_material_init(210, lv.font_roboto_16)
@@ -131,3 +131,10 @@ class GameApp():
 
     def add_item(self, name, item):
         self.sprites_widget[name].append(item)
+
+    def sprite_wait(self,length_of_time):
+        inital = t.time()
+        x = False
+        while(not(x)):
+             current = t.time()
+             x = (current - inital) > length_of_time
