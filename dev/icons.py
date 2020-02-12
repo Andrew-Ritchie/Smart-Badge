@@ -20,7 +20,7 @@ class Ball(Circle):
 
 class PongBoard():
 
-    def __init__(self, parent, x, y, width, height):
+    def __init__(self, parent, width, height, x, y):
         self.x = x
         self.board = Button(parent, x=x, y=y, width=width, height=height)
         self.board_style = lv.style_t()
@@ -31,8 +31,19 @@ class PongBoard():
         self.board_style.body.shadow.width = 0
         self.board.lv_obj.set_style(lv.label.STYLE.MAIN, self.board_style)
 
-    def move_board(self, y):
-        self.board.lv_obj.set_pos(self.x, y)
+    def move(self, x, y):
+        self.board.lv_obj.set_pos(x, y)
+
+
+class Wall():
+
+    def __init__(self, parent, width, height, x, y):
+        self.rects = []
+
+        for i in range(width):
+            for j in range(height):
+                self.rects.append(
+                    Rectangle(parent, (x+i)*5, (y+j)*4, ((x+i)*5+5), ((y+j)*4)+4))
 
 
 class GameObj():
