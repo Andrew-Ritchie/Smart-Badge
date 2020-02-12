@@ -48,12 +48,12 @@ class GameApp():
         self.disp = display
         self.game = g.Game(32, 32)
         self.sprites = {}
-        self.sprites_widget = {}
+#        self.sprites_widget = {}
         self.roll_over = roll_over
         self.border = border
         self.kill = kill
-        for k in self.sprites:
-            self.sprites_widget[k] = []
+#        for k in self.sprites:
+#            self.sprites_widget[k] = []
         self.load_screen()
         self.draw_screen()
 
@@ -72,31 +72,20 @@ class GameApp():
     def draw_initial_sprite(self, sprite):
         x = sprite.x
         y = sprite.y
-        for i in range(sprite.width):
-            for j in range(sprite.height):
-                self.add_item(sprite.name, Rectangle(
-                    self.scr, (x+i)*5, (y+j)*4, ((x+i)*5)+5, ((y+j)*4)+4))
-
-    def draw_initial_sprite_icon(self, sprite):
-        x = sprite.x
-        y = sprite.y
         width = sprite.width
         height = sprite.height
-        if sprite.name == "ball":
-            self.add_item(sprite.name, Ball(
-                self.scr, width*5, height*4, x*5, y*4))
+        if sprite.type == "BALL":
+            sprite.set_icon(Ball(self.scr, width*5, height*4, x*5, y*4))
+        else:
+            sprite.set_icon(Rectangle(self.scr, x*5, y*4, (x+sprite.width)*5, (y+sprite.height*4)))
 
     def __add_spr(self, spr, x, y):
         self.sprites[spr.name] = spr
-        self.sprites_widget[spr.name] = []
         self.game.add_sprite(spr, x, y)
-        if spr.name == "ball":
-            self.draw_initial_sprite_icon(spr)
-        else:
-            self.draw_initial_sprite(spr)
+        self.draw_initial_sprite(spr)
 
-    def add_sprite(self, name, x, y, width=1, height=1):
-        spr = g.Sprite(name, width, height)
+    def add_sprite(self, name, x, y, width=1, height=1, typ=None):
+        spr = g.Sprite(name, width, height, typ)
         self.__add_spr(spr, x, y)
 
     def add_custom_sprite(self, sprite, x, y):
@@ -104,7 +93,6 @@ class GameApp():
         self.__add_spr(spr, x, y)
 
     def move_sprite(self, sprite_id, dx, dy):
-        sprite_rects = self.sprites_widget[sprite_id]
         spr = self.sprites[sprite_id]
         killed = self.game.move_sprite(
             spr, dx, dy, roll_over=self.roll_over, border=self.border, kill=self.kill)
@@ -113,24 +101,20 @@ class GameApp():
 
         if killed:
             del self.sprites[sprite_id]
-            de
-            self.sprites_widget[sprite_id]
             return (spr.name, sprite_id)
 
-        rec = 0
+        spr.icon.move(x*5, y*4)
+        #rec = 0
         # sprite_rects[rec].move(x*5, y*4)
-        if spr.name == "ball":
-            sprite_rects[0].move(x*5, y*4)
-        else:
-            for i in range(spr.width):
-                for j in range(spr.height):
-                    sprite_rects[rec].change_points(
-                        (x+i)*5, (y+j)*4, ((x+i)*5)+5, ((y+j)*4)+4)
+        #if spr.name == "ball":
+         #   sprite_rects[0].move(x*5, y*4)
+        #else:
+            #for i in range(spr.width):
+             #   for j in range(spr.height):
+              #      sprite_rects[rec].change_points(
+               #         (x+i)*5, (y+j)*4, ((x+i)*5)+5, ((y+j)*4)+4)
                     # sprite_rects[rec].move((x+i)*5, (y+j)*4)
-                    rec += 1
-
-    def add_item(self, name, item):
-        self.sprites_widget[name].append(item)
+                #    rec += 1
 
     def sprite_wait(self,length_of_time):
         inital = t.time()

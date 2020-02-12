@@ -11,4 +11,4 @@ class MazeApp(app.GameApp):
 
         super().__init__("Maze", disp, kill=True)
 
-        self.add_sprite("ball", 10, 10, 4, 2)
+        self.add_sprite("ball", 10, 10, 4, 2,"BALL")

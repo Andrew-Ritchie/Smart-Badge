@@ -8,7 +8,7 @@ class Ball(g.Sprite):
 
     #Call the parent class constructor
     def __init__(self):
-        super().__init__("ball",2,2)
+        super().__init__("ball",2,2,"BALL")
 
         #set spesific parameters
         self.direction = [0,0]
@@ -28,8 +28,8 @@ class PongApp(app.GameApp):
         score1 = 0
         score2 = 0
 
-        self.add_sprite("Player1", 0,16,1,5)
-        self.add_sprite("Player2", 31,16,1,5)
+        self.add_sprite("Player1", 0,16,1,5,typ="PADDLE")
+        self.add_sprite("Player2", 31,16,1,5,typ="PADDLE")
         self.add_sprite("wall", 0,0,32,1)
         self.add_sprite("wall", 0,31,32,1)
         self.ball = Ball()

@@ -1,10 +1,15 @@
 class Sprite():
-    def __init__(self, name, width=1, height=1):
+    def __init__(self, name, width=1, height=1, typ = None):
         self.x = -1
         self.y = -1
         self.width = width
         self.height = height
         self.name = name
+        self.type = typ
+        self.icon= None
+
+    def set_icon(self,icon):
+        self.icon = icon
 
 class Game():
     def __init__(self, x,y,debugger=False):
