@@ -100,12 +100,12 @@ class TextArea():
         self.lv_obj.set_text(text)
 
 
-class Line(lv.line):
+class Line():
 
     def __init__(self, parent, points=None):
         # Pass in points as a list of tuples in the form:
         #       points = [(x1,y1),(x2,y2),(x3,y3)...]
-        super().__init__(parent)
+        self.lv_obj = lv.line(parent)
         if points:
             self.set_line_points(points)
 
@@ -129,11 +129,11 @@ class Line(lv.line):
         return style_line
 
     def set_custom_style(self, style):
-        self.set_style(lv.line.STYLE.MAIN, style)
+        self.lv_obj.set_style(lv.line.STYLE.MAIN, style)
 
     def set_line_points(self, points):
         formatted = self.format(points)
-        self.set_points(formatted, len(formatted))
+        self.lv_obj.set_points(formatted, len(formatted))
 
 
 class Bar(lv.bar):
@@ -167,6 +167,7 @@ class Rectangle():
         self.br_y = br_y
         self.points = self.create_array(tl_x, tl_y, br_x, br_y)
         self.line = Line(parent, self.points)
+        self.lv_obj = self.line.lv_obj
 
     def create_array(self, tl_x, tl_y, br_x, br_y):
         return [(tl_x, tl_y),
@@ -252,3 +253,18 @@ class Table():
 
     def set_cell_content(self, row, col, content):
         self.lv_obj.set_cell_value(row, col, content)
+
+class Circle(lv.obj):
+
+    def __init__(self, parent, width, height, x, y):
+        super().__init__(parent)
+        self.set_size(width,height)
+        self.set_pos(x,y)
+
+        self.circle_style = lv.style_t()
+        lv.style_copy(self.circle_style, lv.style_plain)
+        self.circle_style.body.radius = lv.RADIUS.CIRCLE
+        self.set_style(self.circle_style)
+
+    def move(self, x, y):
+        self.set_pos(x, y)
