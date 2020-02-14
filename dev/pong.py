@@ -7,7 +7,6 @@ import time as t
 
 class Ball(g.Sprite):
 
-    # Call the parent class constructor
     def __init__(self):
         super().__init__("ball", 3, 3, "BALL")
         self.direction = [0, 0]
@@ -16,7 +15,7 @@ class Ball(g.Sprite):
 
     def reset(self):
         self.speed = 8.0
-        # make this random
+        # TODO: Introduce randomness
         self.direction = [1, 1]
 
 

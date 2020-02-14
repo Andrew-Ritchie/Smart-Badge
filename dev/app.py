@@ -1,12 +1,15 @@
 import lvgl as lv
-from display import Display
-from widgets import *
-from icons import *
+import widgets as w
+import icons as i
 import game as g
 import time as t
+
 NIGHT_THEME = lv.theme_night_init(210, lv.font_roboto_16)
 DEFAULT_THEME = lv.theme_default_init(210, lv.font_roboto_16)
 MATERIAL_THEME = lv.theme_material_init(210, lv.font_roboto_16)
+
+DISP_SCALE_X = 5
+DISP_SCALE_Y = 4
 
 
 class App():
@@ -20,10 +23,10 @@ class App():
         self.disp = display
         self.items = {}
         self.item_ids = {}
-        self.cont = Container(self.scr)
+        self.cont = w.Container(self.scr)
 
     def set_title(self, title, font_size=None):
-        self.items['title'] = Label(self.cont, title, font_size=font_size)
+        self.items['title'] = w.Label(self.cont, title, font_size=font_size)
 
     def load_screen(self):
         lv.scr_load(self.scr)
@@ -59,11 +62,11 @@ class GameApp():
 
     def draw_screen(self):
         # 160 x 128 screen
-        # 5 x 4 for each element in grid
         for x in range(self.game.x):
             for y in range(self.game.y):
                 if self.game.present_at(x, y) != "ball":
-                    Rectangle(self.scr, x*5, y*4, (x*5)+5, (y*4)+4)
+                    w.Rectangle(self.scr, x*DISP_SCALE_X, y *
+                                DISP_SCALE_Y, (x*DISP_SCALE_X)+DISP_SCALE_X, (y*DISP_SCALE_Y)+DISP_SCALE_Y)
 
     def draw_initial_sprite(self, sprite):
         x = sprite.x
@@ -71,11 +74,16 @@ class GameApp():
         width = sprite.width
         height = sprite.height
         if sprite.type == "BALL":
-            sprite.set_icon(Ball(self.scr, width*5, height*4, x*5, y*4))
+            sprite.set_icon(
+                i.Ball(self.scr, width*DISP_SCALE_X, height*DISP_SCALE_Y, x*DISP_SCALE_X, y*DISP_SCALE_Y))
         elif sprite.type == "PADDLE":
-            sprite.set_icon(PongBoard(self.scr, width*5, height*4, x*5, y*4))
+            sprite.set_icon(i.PongBoard(self.scr, width*DISP_SCALE_X,
+                                        height*DISP_SCALE_Y, x*DISP_SCALE_X, y*DISP_SCALE_Y))
+        elif sprite.type == "WALL":
+            sprite.set_icon(i.Grid(self.scr, width, height, x, y))
         else:
-            sprite.set_icon(Wall(self.scr, width, height, x, y))
+            print("Undefined sprite type requested, defaulting to grid of squares")
+            sprite.set_icon(i.Grid(self.scr, width, height, x, y))
 
     def _add_spr(self, spr, x, y):
         self.sprites[spr.name] = spr
@@ -101,11 +109,11 @@ class GameApp():
             return (spr.name, sprite_id)
 
         if spr.type != None:
-            spr.icon.move(x*5, y*4)
+            spr.icon.move(x*DISP_SCALE_X, y*DISP_SCALE_Y)
 
     def sprite_wait(self, length_of_time):
         inital = t.time()
         x = False
-        while(not(x)):
+        while not x:
             current = t.time()
             x = (current - inital) > length_of_time

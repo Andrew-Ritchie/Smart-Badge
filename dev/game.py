@@ -1,5 +1,5 @@
 class Sprite():
-    def __init__(self, name, width=1, height=1, typ = None):
+    def __init__(self, name, width=1, height=1, typ=None):
         self.x = -1
         self.y = -1
         self.width = width
@@ -93,7 +93,7 @@ class Game():
                 spr.x += distance
 
     #Move one sprite, given distance, currently goes 1 step at a time, may want to update this?
-    def move_sprite(self, sprite, dx, dy, stop=True, replace="empty", roll_over=False, kill=False,border = False):
+    def move_sprite(self, sprite, dx, dy, stop=True, replace="empty", roll_over=False, kill=False, border=False):
         replace_id = self._get_id(replace)
         sprite_id = self._get_id(sprite.name)
         count_x = abs(dx)

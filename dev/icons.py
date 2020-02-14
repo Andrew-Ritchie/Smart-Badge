@@ -35,7 +35,7 @@ class PongBoard():
         self.board.lv_obj.set_pos(x, y)
 
 
-class Wall():
+class Grid():
 
     def __init__(self, parent, width, height, x, y):
         self.rects = []
