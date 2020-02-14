@@ -35,22 +35,22 @@ class Container(lv.cont):
 
 class Label():
 
-    def __init__(self, parent, text, width=None, font_size=None):        
-        self.lv_obj = lv.label(parent)        
+    def __init__(self, parent, text, width=None, font_size=None):
+        self.lv_obj = lv.label(parent)
         if font_size:
             self._set_font_size(font_size)
         self.text = text
-        # Default to scrolling text if long        
-        self.lv_obj.set_long_mode(lv.label.LONG.SROLL_CIRC)        
-        self.lv_obj.set_width(width if width else parent.get_width()-10)        
-        self.lv_obj.set_text(self.text)        
-        self.lv_obj.set_align(lv.label.ALIGN.CENTER)        
+        # Default to scrolling text if long
+        self.lv_obj.set_long_mode(lv.label.LONG.SROLL_CIRC)
+        self.lv_obj.set_width(width if width else parent.get_width()-10)
+        self.lv_obj.set_text(self.text)
+        self.lv_obj.set_align(lv.label.ALIGN.CENTER)
 
     def update_text(self, text):
         self.lv_obj.set_text(text)
 
     def _set_font_size(self, font_size):
-        style = lv.style_t()       
+        style = lv.style_t()
         lv.style_copy(style, self.lv_obj.get_style(lv.label.STYLE.MAIN))
         if font_size == 28:
             style.text.font = lv.font_roboto_28
@@ -59,7 +59,7 @@ class Label():
 
 class Button():
 
-    def __init__(self, parent, text=None, font_size=None, x=0, y=0, width=None, height=None, app=None):        
+    def __init__(self, parent, text=None, font_size=None, x=0, y=0, width=None, height=None, app=None):
         self.lv_obj = lv.btn(parent)
         self.parent = parent
         self.x = x
@@ -67,15 +67,15 @@ class Button():
         self.width = width if width else parent.get_width()-10
         self.height = height if height else 25
         self.lv_obj.set_size(self.width, self.height)
-        self.lv_obj.set_pos(x, y)        
+        self.lv_obj.set_pos(x, y)
         self.label = None
         if text:
             self.set_text(text, font_size)
         if app:
             self.app_name = app
 
-    def set_text(self, text, font_size):        
-        if self.label:         
+    def set_text(self, text, font_size):
+        if self.label:
             self.label.lv_obj.set_text(text)
         else:
             self.label = Label(self.lv_obj, text, self.width-10, font_size)
@@ -238,3 +238,17 @@ class Image(lv.img):
 
     def centralise(self):
         self.align(None, lv.ALIGN.CENTER, 0, 0)
+
+class Table():
+    def __init__(self, parent, rows, cols, x=0, y=0):
+        self.lv_obj = lv.table(parent)
+        self.parent = parent
+        self.rows = rows
+        self.cols = cols
+        self.x = x
+        self.y = y
+        self.lv_obj.set_col_cnt(cols)
+        self.lv_obj.set_row_cnt(rows)
+
+    def set_cell_content(self, row, col, content):
+        self.lv_obj.set_cell_value(row, col, content)
