@@ -110,15 +110,12 @@ class BLETemperatureCentral:
                 self._ble.gattc_discover_characteristics(self._conn_handle, start_handle, end_handle)
 
         elif event == _IRQ_GATTC_CHARACTERISTIC_RESULT:
-            print('characteristic result')
             # Connected device returned a characteristic.
             conn_handle, def_handle, value_handle, properties, uuid = data
-            print('char data:', data)
             if conn_handle == self._conn_handle and uuid == _UART_TX[0]:
                 self._value_handle_tx = value_handle
                 self._value_handle = value_handle
                 # We've finished connecting and discovering device, fire the connect callback.
-                print('firing connect callback')
                 if self._conn_callback:
                     self._conn_callback()
             elif conn_handle == self._conn_handle and uuid == _UART_RX[0]:
@@ -184,7 +181,7 @@ class BLETemperatureCentral:
 
     def _update_value(self, data):
         # Data is sint16 in degrees Celsius with a resolution of 0.01 degrees Celsius.
-        self._value = struct.unpack('<h', data)[0] / 100
+        self._value = data#struct.unpack('<h', data)[0] / 100
         return self._value
 
     def value(self):
@@ -211,6 +208,7 @@ def demo():
             print('No sensor found.')
 
     central.scan(callback=on_scan)
+    central.on_notify(callback=lambda val: print(val))
 
     # Wait for connection...
     while not central.is_connected():
