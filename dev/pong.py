@@ -3,20 +3,17 @@ from widgets import *
 import app
 import game as g
 import time as t
-
+import random as r
 
 class Ball(g.Sprite):
 
     def __init__(self):
         super().__init__("ball", 3, 3, "BALL")
         self.direction = [0, 0]
-        self.speed = 0
         self.reset()
 
     def reset(self):
-        self.speed = 8.0
-        # TODO: Introduce randomness
-        self.direction = [1, 1]
+        self.direction = [[-1,1][r.randint(0,2)], r.randint(-1,2)]
 
 
 class PongApp(app.GameApp):
@@ -35,6 +32,11 @@ class PongApp(app.GameApp):
         self.add_custom_sprite(self.ball, 16, 16)
 
     def bounce_ball(self):
+        random_bounce = r.randint(0,16)
+        if random_bounce <= 12:
+            self.direction = [[-1,1][r.randint(0,1)], r.randint(-1,1)]
+            return "RAND"
+
         if self.game.collision_edge(self.ball, 0, 1):
             self.ball.direction[0] = -1
         elif self.game.collision_edge(self.ball, 0, -1):
@@ -43,6 +45,8 @@ class PongApp(app.GameApp):
             self.ball.direction[1] = -1
         elif self.game.collision_edge(self.ball, 1, -1):
             self.ball.direction[1] = 1
+
+        return "BOUNCE"
 
     def move_ball(self):
         self.bounce_ball()
