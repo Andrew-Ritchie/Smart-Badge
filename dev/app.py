@@ -43,13 +43,13 @@ class App():
 
 class GameApp():
 
-    def __init__(self, name, display, th=MATERIAL_THEME, roll_over=False, border=False, kill=False):
+    def __init__(self, name, display, th=MATERIAL_THEME, debug = False, roll_over=False, border=False, kill=False):
         self.theme = th
         lv.theme_set_current(self.theme)
         self.scr = lv.obj()
         self.name = name
         self.disp = display
-        self.game = g.Game(32, 32)
+        self.game = g.Game(32, 32, debugger=debug)
         self.sprites = {}
         self.roll_over = roll_over
         self.border = border
@@ -93,6 +93,7 @@ class GameApp():
     def add_sprite(self, name, x, y, width=1, height=1, typ=None):
         sprite = g.Sprite(name, width, height, typ)
         self._add_spr(sprite, x, y)
+        return sprite
 
     def add_custom_sprite(self, sprite, x, y):
         self._add_spr(sprite, x, y)
@@ -117,3 +118,6 @@ class GameApp():
         while not x:
             current = t.time()
             x = (current - inital) > length_of_time
+
+    def _debug(self, string):
+        self.game._debug(string)

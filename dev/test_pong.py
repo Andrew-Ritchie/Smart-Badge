@@ -22,12 +22,14 @@ def go_left(x):
 def go_right(x):
      pong_app.move_sprite("Player2",0,-1)
 
-buttons.up.set_callback_edge(go_up)
-buttons.down.set_callback_edge(go_down)
-buttons.a.set_callback_edge(go_left)
-buttons.b.set_callback_edge(go_right)
-
+buttons.left.set_callback_edge(go_up)
+buttons.up.set_callback_edge(go_down)
+buttons.down.set_callback_edge(go_left)
+buttons.right.set_callback_edge(go_right)
+print(pong_app.ball.direction)
 while True:
-    print(".", end = "")
-    pong_app.move_ball()
-    time.sleep_ms(1)
+    print(pong_app.ball.direction, pong_app.ball.x, pong_app.ball.y)
+    print(pong_app.move_ball())
+    print(pong_app.ball.direction, pong_app.ball.x, pong_app.ball.y)
+    print("\n\n")
+    time.sleep_ms(100)
