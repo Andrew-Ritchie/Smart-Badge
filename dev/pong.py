@@ -45,19 +45,19 @@ class PongApp(app.GameApp):
             if Right:
                 self.ball.direction[0] = -1 
 
-                if self.ball.y > self.player_2.y + self.player_2.height//2 - 2:
-                    self.ball.direction[1] = -1
-                if self.ball.y < self.player_2.y + self.player_2.height//2 + 2:
+                if self.ball.y > self.player_2.y + self.player_2.height//2 + 1:
                     self.ball.direction[1] = 1
+                if self.ball.y < self.player_2.y + self.player_2.height//2 - 1:
+                    self.ball.direction[1] = -1
                 else:
                     self.ball.direction[1] = 0
         
             elif Left:
                 self.ball.direction[0] = 1 
             
-                if self.ball.y > self.player_1.y + self.player_1.height//2 - 2:
+                if self.ball.y > self.player_1.y + self.player_1.height//2 + 1:
                     self.ball.direction[1] = 1
-                if self.ball.y < self.player_1.y + self.player_1.height//2 + 2:
+                if self.ball.y < self.player_1.y + self.player_1.height//2 - 1:
                     self.ball.direction[1] = -1
                 else:
                     self.ball.direction[1] = 0
