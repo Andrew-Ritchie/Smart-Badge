@@ -13,14 +13,14 @@ import lvgl as lv
 # RIGHT_M = lv.ALIGN.IN_RIGHT_MID
 
 
-class Container(lv.cont):
+class Container():
 
     def __init__(self, parent):
-        super().__init__(parent)
-        self.set_auto_realign(True)
-        self.set_fit(lv.FIT.FLOOD)
-        self.set_layout(lv.LAYOUT.PRETTY)
-        self.width = self.get_width()
+        self.lv_obj = lv.cont(parent)
+        self.lv_obj.set_auto_realign(True)
+        self.lv_obj.set_fit(lv.FIT.FLOOD)
+        self.lv_obj.set_layout(lv.LAYOUT.PRETTY)
+        self.width = self.lv_obj.get_width()
         self.half_width = self.width//2 - 13
         self.third_width = self.width//3 - 10
 
@@ -31,26 +31,30 @@ class Container(lv.cont):
         return self.third_width
 
     def set_center(self):
-        self.set_layout(lv.LAYOUT.CENTER)
+        self.lv_obj.set_layout(lv.LAYOUT.CENTER)
+
+    def get_width(self):
+        return self.lv_obj.get_width()
+
 
 class Label():
 
-    def __init__(self, parent, text, width=None, font_size=None):        
-        self.lv_obj = lv.label(parent)        
+    def __init__(self, parent, text, width=None, font_size=None):
+        self.lv_obj = lv.label(parent)
         if font_size:
             self._set_font_size(font_size)
         self.text = text
-        # Default to scrolling text if long        
-        self.lv_obj.set_long_mode(lv.label.LONG.SROLL_CIRC)        
-        self.lv_obj.set_width(width if width else parent.get_width()-10)        
-        self.lv_obj.set_text(self.text)        
-        self.lv_obj.set_align(lv.label.ALIGN.CENTER)        
+        # Default to scrolling text if long
+        self.lv_obj.set_long_mode(lv.label.LONG.SROLL_CIRC)
+        self.lv_obj.set_width(width if width else parent.get_width()-10)
+        self.lv_obj.set_text(self.text)
+        self.lv_obj.set_align(lv.label.ALIGN.CENTER)
 
     def update_text(self, text):
         self.lv_obj.set_text(text)
 
     def _set_font_size(self, font_size):
-        style = lv.style_t()       
+        style = lv.style_t()
         lv.style_copy(style, self.lv_obj.get_style(lv.label.STYLE.MAIN))
         if font_size == 28:
             style.text.font = lv.font_roboto_28
@@ -59,29 +63,30 @@ class Label():
 
 class Button():
 
-    def __init__(self, parent, text=None, font_size=None, x=0, y=0, width=None, height=None, app=None):        
-        self.lv_obj = lv.btn(parent)
+    def __init__(self, parent, text=None, font_size=None, x=0, y=0, width=None, height=None, app=None):
+        self.lv_obj = lv.btn(parent)        
         self.parent = parent
         self.x = x
         self.y = y
         self.width = width if width else parent.get_width()-10
         self.height = height if height else 25
         self.lv_obj.set_size(self.width, self.height)
-        self.lv_obj.set_pos(x, y)        
+        self.lv_obj.set_pos(x, y)
         self.label = None
         if text:
             self.set_text(text, font_size)
         if app:
             self.app_name = app
 
-    def set_text(self, text, font_size):        
-        if self.label:         
+    def set_text(self, text, font_size):
+        if self.label:
             self.label.lv_obj.set_text(text)
         else:
             self.label = Label(self.lv_obj, text, self.width-10, font_size)
 
     def click(self):
         self.toggle()
+
 
 class TextArea():
 
@@ -104,7 +109,7 @@ class Line():
 
     def __init__(self, parent, points=None):
         # Pass in points as a list of tuples in the form:
-        #       points = [(x1,y1),(x2,y2),(x3,y3)...]        
+        #       points = [(x1,y1),(x2,y2),(x3,y3)...]
         self.lv_obj = lv.line(parent)
         if points:
             self.set_line_points(points)
@@ -240,12 +245,13 @@ class Image(lv.img):
     def centralise(self):
         self.align(None, lv.ALIGN.CENTER, 0, 0)
 
+
 class Circle(lv.obj):
 
     def __init__(self, parent, width, height, x, y):
         super().__init__(parent)
-        self.set_size(width,height)
-        self.set_pos(x,y)
+        self.set_size(width, height)
+        self.set_pos(x, y)
 
         self.circle_style = lv.style_t()
         lv.style_copy(self.circle_style, lv.style_plain)

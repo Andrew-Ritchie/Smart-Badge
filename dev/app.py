@@ -17,7 +17,7 @@ class App():
     def __init__(self, name, display, th=NIGHT_THEME):
         self.theme = th
         self.group = lv.group_create()
-        lv.theme_set_current(self.theme)
+        # lv.theme_set_current(self.theme)
         self.scr = lv.obj()
         self.name = name
         self.disp = display
@@ -26,7 +26,8 @@ class App():
         self.cont = w.Container(self.scr)
 
     def set_title(self, title, font_size=None):
-        self.items['title'] = w.Label(self.cont, title, font_size=font_size)
+        self.items['title'] = w.Label(
+            self.cont.lv_obj, title, font_size=font_size)
 
     def load_screen(self):
         lv.scr_load(self.scr)
@@ -43,7 +44,7 @@ class App():
 
 class GameApp():
 
-    def __init__(self, name, display, th=MATERIAL_THEME, debug = False, roll_over=False, border=False, kill=False):
+    def __init__(self, name, display, th=MATERIAL_THEME, debug=False, roll_over=False, border=False, kill=False):
         self.theme = th
         lv.theme_set_current(self.theme)
         self.scr = lv.obj()
