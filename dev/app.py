@@ -14,16 +14,29 @@ DISP_SCALE_Y = 4
 
 class App():
 
-    def __init__(self, name, display, th=NIGHT_THEME):
-        self.theme = th
+    def __init__(self, name, display, buttons, **kwargs):
+        self.disp = display
+        self.buttons = buttons
+        # self.theme = th
         self.group = lv.group_create()
         # lv.theme_set_current(self.theme)
         self.scr = lv.obj()
+        self.load_screen()
         self.name = name
-        self.disp = display
         self.items = {}
         self.item_ids = {}
         self.cont = w.Container(self.scr)
+        self.set_buttons(kwargs.get("btn_left", lambda x: print("undefined left")),
+                         kwargs.get("btn_right", lambda x: print(
+                             "undefined right")),
+                         kwargs.get("btn_up", lambda x: print("undefined up")),
+                         kwargs.get("btn_down", lambda x: print(
+                             "undefined down")),
+                         kwargs.get("btn_a", lambda x: print("undefined a")),
+                         kwargs.get("btn_b", lambda x: print("undefined b")),
+                         kwargs.get("btn_x", lambda x: print("undefined x")),
+                         kwargs.get("btn_y", lambda x: print("undefined y")),
+                         )
 
     def set_title(self, title, font_size=None):
         self.items['title'] = w.Label(
@@ -41,20 +54,43 @@ class App():
     def get_cont(self):
         return self.cont
 
+    def set_buttons(self, btn_left, btn_right, btn_up, btn_down, btn_a, btn_b, btn_x, btn_y):
+        self.buttons.left.set_callback_edge(btn_left)
+        self.buttons.right.set_callback_edge(btn_right)
+        self.buttons.up.set_callback_edge(btn_up)
+        self.buttons.down.set_callback_edge(btn_down)
+        # self.buttons.a.set_callback_edge(btn_a)
+        self.buttons.b.set_callback_edge(btn_b)
+        # self.buttons.x.set_callback_edge(btn_x)
+        self.buttons.y.set_callback_edge(btn_y)
+
 
 class GameApp():
 
-    def __init__(self, name, display, th=MATERIAL_THEME, debug=False, roll_over=False, border=False, kill=False):
-        self.theme = th
-        lv.theme_set_current(self.theme)
-        self.scr = lv.obj()
-        self.name = name
+    def __init__(self, name, display, buttons, th=MATERIAL_THEME, debug=False, roll_over=False, border=False, kill=False, **kwargs):
         self.disp = display
+        self.buttons = buttons
+        self.theme = th
+        # lv.theme_set_current(self.theme)
+        self.scr = lv.obj()
+        print(id(self.scr))
+        self.name = name
         self.game = g.Game(32, 32, debugger=debug)
         self.sprites = {}
         self.roll_over = roll_over
         self.border = border
         self.kill = kill
+        self.set_buttons(kwargs.get("btn_left", lambda x: print("undefined left")),
+                         kwargs.get("btn_right", lambda x: print(
+                             "undefined right")),
+                         kwargs.get("btn_up", lambda x: print("undefined up")),
+                         kwargs.get("btn_down", lambda x: print(
+                             "undefined down")),
+                         kwargs.get("btn_a", lambda x: print("undefined a")),
+                         kwargs.get("btn_b", lambda x: print("undefined b")),
+                         kwargs.get("btn_x", lambda x: print("undefined x")),
+                         kwargs.get("btn_y", lambda x: print("undefined y")),
+                         )
         self.load_screen()
         # self.draw_screen()
 
@@ -78,21 +114,27 @@ class GameApp():
             sprite.set_icon(
                 i.Ball(self.scr, width*DISP_SCALE_X, height*DISP_SCALE_Y, x*DISP_SCALE_X, y*DISP_SCALE_Y))
         elif sprite.type == "PADDLE":
+            print("making paddle")
             sprite.set_icon(i.PongBoard(self.scr, width*DISP_SCALE_X,
                                         height*DISP_SCALE_Y, x*DISP_SCALE_X, y*DISP_SCALE_Y))
         elif sprite.type == "WALL":
-            sprite.set_icon(i.Grid(self.scr, width, height, x, y))
+            # sprite.set_icon(i.Grid(self.scr, width, height, x, y))
+            pass
         else:
             print("Undefined sprite type requested, defaulting to grid of squares")
             sprite.set_icon(i.Grid(self.scr, width, height, x, y))
 
     def _add_spr(self, spr, x, y):
         self.sprites[spr.name] = spr
+        print("adding sprite to game")
         self.game.add_sprite(spr, x, y)
+        print("drawing sprite")
         self.draw_initial_sprite(spr)
 
     def add_sprite(self, name, x, y, width=1, height=1, typ=None):
+        print("adding new sprite")
         sprite = g.Sprite(name, width, height, typ)
+        print("made game sprite")
         self._add_spr(sprite, x, y)
         return sprite
 
@@ -122,3 +164,13 @@ class GameApp():
 
     def _debug(self, string):
         self.game._debug(string)
+
+    def set_buttons(self, btn_left, btn_right, btn_up, btn_down, btn_a, btn_b, btn_x, btn_y):
+        self.buttons.left.set_callback_edge(btn_left)
+        self.buttons.right.set_callback_edge(btn_right)
+        self.buttons.up.set_callback_edge(btn_up)
+        self.buttons.down.set_callback_edge(btn_down)
+        # self.buttons.a.set_callback_edge(btn_a)
+        self.buttons.b.set_callback_edge(btn_b)
+        # self.buttons.x.set_callback_edge(btn_x)
+        self.buttons.y.set_callback_edge(btn_y)
