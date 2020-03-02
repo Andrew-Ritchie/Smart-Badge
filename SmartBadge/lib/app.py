@@ -80,10 +80,10 @@ class GameApp():
             sprite.set_icon(i.PongBoard(self.scr, width*DISP_SCALE_X,
                                         height*DISP_SCALE_Y, x*DISP_SCALE_X, y*DISP_SCALE_Y))
         elif sprite.type == "WALL":
-            sprite.set_icon(i.Grid(self.scr, width, height, x, y))
+            sprite.set_icon(i.Wall(self.scr, width, height, x, y))
         else:
             print("Undefined sprite type requested, defaulting to grid of squares")
-            sprite.set_icon(i.Grid(self.scr, width, height, x, y))
+            sprite.set_icon(i.Wall(self.scr, width, height, x, y))
 
     def _add_spr(self, spr, x, y):
         self.sprites[spr.name] = spr

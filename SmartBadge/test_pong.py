@@ -2,7 +2,7 @@ import lvgl as lv
 from lib.screen.display import Display
 from pong import PongApp
 import time
-import lib.ext.sensors
+import lib.ext.sensors as sensors
 # Initialise LittlevGL -- for display
 lv.init()
 

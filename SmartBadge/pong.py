@@ -25,8 +25,8 @@ class PongApp(app.GameApp):
 
         self.player_1 = self.add_sprite("Player1", 1, 16, 1, 10, typ="PADDLE")
         self.player_2 = self.add_sprite("Player2", 30, 16, 1, 10, typ="PADDLE")
-        self.add_sprite("wall", 0, 0, 32, 2)
-        self.add_sprite("wall", 0, 30, 32, 2)
+        self.add_sprite("WALL", 0, 0, 32, 2)
+        self.add_sprite("WALL", 0, 30, 32, 2)
         self.ball = Ball()
         self.add_custom_sprite(self.ball, 16, 16)
 
@@ -35,7 +35,7 @@ class PongApp(app.GameApp):
         Left = self.game.collision_edge(self.ball,0,-1)
         Up   = self.game.collision_edge(self.ball,1,1)
         Down = self.game.collision_edge(self.ball,1,-1)
-   
+
         if (self.ball.x + self.ball.width == 29 or self.ball.x - self.ball.width == 3) :
             if self.ball.y + self.ball.height == 29 :
                 self.ball.direction[1] = -2 - r.randint(0,5)
@@ -43,7 +43,7 @@ class PongApp(app.GameApp):
                 self.ball.direction[1] = 2 + r.randint(0,5)
         else:
             if Right:
-                self.ball.direction[0] = -1 
+                self.ball.direction[0] = -1
 
                 if self.ball.y > self.player_2.y + self.player_2.height//2 + 1:
                     self.ball.direction[1] = 1
@@ -51,10 +51,10 @@ class PongApp(app.GameApp):
                     self.ball.direction[1] = -1
                 else:
                     self.ball.direction[1] = 0
-        
+
             elif Left:
-                self.ball.direction[0] = 1 
-            
+                self.ball.direction[0] = 1
+
                 if self.ball.y > self.player_1.y + self.player_1.height//2 + 1:
                     self.ball.direction[1] = 1
                 if self.ball.y < self.player_1.y + self.player_1.height//2 - 1:
@@ -63,10 +63,10 @@ class PongApp(app.GameApp):
                     self.ball.direction[1] = 0
 
             elif Up:
-                self.ball.direction[1] = -1 
+                self.ball.direction[1] = -1
             elif Down:
-                self.ball.direction[1] = 1 
-     
+                self.ball.direction[1] = 1
+
         return "Collision at Right:{R},Left:{L},Up:{U},Down:{D}".format(R=Right, L=Left, U=Up,D=Down)
 
     def move_ball(self):
