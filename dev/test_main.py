@@ -7,6 +7,7 @@ from pong import PongApp
 from display import Display
 import sensors
 import time
+from machine import Timer
 
 # Initialise LittlevGL -- for display
 lv.init()
@@ -17,4 +18,5 @@ disp = Display()
 buttons = sensors.Buttons(up=27, down=33, left=25,
                           right=12, a=35, b=26, x=34, y=32)
 
-MainMenuApp(disp, buttons)
+tim = Timer(-1)
+MainMenuApp(disp, buttons, tim)

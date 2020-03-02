@@ -7,12 +7,11 @@ from pong import PongApp
 
 class MainMenuApp(App):
 
-    def __init__(self, disp, buttons):
-        super().__init__(name="Main Menu", display=disp, buttons=buttons,
+    def __init__(self, disp, buttons, tim):
+        super().__init__(name="Main Menu", display=disp, buttons=buttons, timer=tim,
                          btn_left=self.btn_left,
                          btn_right=self.btn_right,
                          btn_b=self.btn_b)
-
         self.set_title("Welcome to SmartBadge!", font_size=28)
 
         cont = self.get_cont()
@@ -25,7 +24,7 @@ class MainMenuApp(App):
                                      width=cont.half(), app=PongApp), selectable=True)
         self.add_item("name", Button(cont.lv_obj, text="Name",
                                      width=cont.half(), app=NameApp), selectable=True)
-        print(id(self.scr))
+
         self.load_screen()
 
     def btn_left(self, x):
@@ -37,4 +36,4 @@ class MainMenuApp(App):
     def btn_b(self, x):
         focused = lv.group_get_focused(self.group)
         app = self.item_ids[id(focused)].app_name
-        app(self.disp, self.buttons)
+        ac_app = app(self.disp, self.buttons, self.tim)

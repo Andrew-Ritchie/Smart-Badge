@@ -19,13 +19,14 @@ class Ball(g.Sprite):
 
 class PongApp(app.GameApp):
 
-    def __init__(self, disp, buttons):
+    def __init__(self, disp, buttons, tim):
 
         super().__init__("Pong", display=disp, buttons=buttons, debug=False, roll_over=False, border=False, kill=False,
                          btn_left=self.btn_left,
                          btn_right=self.btn_right,
                          btn_up=self.btn_up,
-                         btn_down=self.btn_down)
+                         btn_down=self.btn_down,
+                         btn_b=self.btn_b)
         score1 = 0
         score2 = 0
         self.player_1 = self.add_sprite("Player1", 1, 16, 1, 10, typ="PADDLE")
@@ -34,14 +35,11 @@ class PongApp(app.GameApp):
         # self.add_sprite("wall", 0, 30, 32, 2)
         self.ball = Ball()
         self.add_custom_sprite(self.ball, 16, 16)
+        self.tim = tim
 
-        # self.load_screen()
-        self._run()
-
-    def _run(self):
-        for i in range(10):
-            self.move_ball()
-            t.sleep_ms(100)
+        self.load_screen()
+        tim.init(period=500, mode=Timer.PERIODIC,
+                 callback=lambda t: self.move_ball())
 
     def bounce_ball(self):
         Right = self.game.collision_edge(self.ball, 0, 1)
@@ -83,7 +81,6 @@ class PongApp(app.GameApp):
         return "Collision at Right:{R},Left:{L},Up:{U},Down:{D}".format(R=Right, L=Left, U=Up, D=Down)
 
     def move_ball(self):
-        print("moving ball")
         s = self.bounce_ball()
         self.move_sprite(
             "ball", self.ball.direction[0], self.ball.direction[1])
@@ -100,3 +97,7 @@ class PongApp(app.GameApp):
 
     def btn_right(self, x):
         self.move_sprite("Player2", 0, -1)
+
+    def btn_b(self, x):
+        from main_menu import MainMenuApp
+        mm = MainMenuApp(self.disp, self.buttons, self.tim)

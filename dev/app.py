@@ -14,18 +14,18 @@ DISP_SCALE_Y = 4
 
 class App():
 
-    def __init__(self, name, display, buttons, **kwargs):
+    def __init__(self, name, display, buttons, timer, **kwargs):        
         self.disp = display
         self.buttons = buttons
+        self.tim = timer
         # self.theme = th
         self.group = lv.group_create()
         # lv.theme_set_current(self.theme)
-        self.scr = lv.obj()
-        self.load_screen()
+        self.scr = lv.obj()        
         self.name = name
         self.items = {}
         self.item_ids = {}
-        self.cont = w.Container(self.scr)
+        self.cont = w.Container(self.scr)        
         self.set_buttons(kwargs.get("btn_left", lambda x: print("undefined left")),
                          kwargs.get("btn_right", lambda x: print(
                              "undefined right")),
@@ -73,7 +73,6 @@ class GameApp():
         self.theme = th
         # lv.theme_set_current(self.theme)
         self.scr = lv.obj()
-        print(id(self.scr))
         self.name = name
         self.game = g.Game(32, 32, debugger=debug)
         self.sprites = {}
@@ -91,8 +90,6 @@ class GameApp():
                          kwargs.get("btn_x", lambda x: print("undefined x")),
                          kwargs.get("btn_y", lambda x: print("undefined y")),
                          )
-        self.load_screen()
-        # self.draw_screen()
 
     def load_screen(self):
         lv.scr_load(self.scr)
@@ -114,7 +111,6 @@ class GameApp():
             sprite.set_icon(
                 i.Ball(self.scr, width*DISP_SCALE_X, height*DISP_SCALE_Y, x*DISP_SCALE_X, y*DISP_SCALE_Y))
         elif sprite.type == "PADDLE":
-            print("making paddle")
             sprite.set_icon(i.PongBoard(self.scr, width*DISP_SCALE_X,
                                         height*DISP_SCALE_Y, x*DISP_SCALE_X, y*DISP_SCALE_Y))
         elif sprite.type == "WALL":
@@ -126,15 +122,11 @@ class GameApp():
 
     def _add_spr(self, spr, x, y):
         self.sprites[spr.name] = spr
-        print("adding sprite to game")
         self.game.add_sprite(spr, x, y)
-        print("drawing sprite")
         self.draw_initial_sprite(spr)
 
     def add_sprite(self, name, x, y, width=1, height=1, typ=None):
-        print("adding new sprite")
         sprite = g.Sprite(name, width, height, typ)
-        print("made game sprite")
         self._add_spr(sprite, x, y)
         return sprite
 
