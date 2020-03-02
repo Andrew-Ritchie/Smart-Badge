@@ -10,34 +10,43 @@ class BlueComm(object):
 
     def __init__(self, slave=True):
         self.ble = bluetooth.BLE()
-        self.slave = slave
+        self._slave = slave
 
-        if self.slave:
+        if self._slave:
             display_name = 'Badge-'+''.join(['{:02x}'.format(b) for b in machine.unique_id()])
             self.uart = bleuart.BLEUART(self.ble, name=display_name)
         else:
             self.master = blemaster.BLETemperatureCentral(self.ble)
 
-            not_found = False
+    def scan(self):
+        if self._slave:
+            return None
+        else:
+            detected_devices = []
 
             def on_scan(addr_type, addr, name):
                 if addr_type is not None:
-                    self.master.connect()
-                else:
-                    nonlocal not_found
-                    not_found = True
+                    nonlocal detected_devices
+                    detected_devices.append((self.master._addr_type, self.master._addr))
+                    print(detected_devices)
+                    #self.master.connect()
 
             self.master.scan(callback=on_scan)
+            return detected_devices
+
+    def connect(self, addr_type, addr):
+        if not self._slave:
+            self.master._addr_type = addr_type
+            self.master._addr = addr
+
+            self.master.connect()
 
             # Wait for connection...
             while not self.master.is_connected():
                 time.sleep_ms(100)
-                if not_found:
-                    return
-
 
     def irq(self,fn):
-        if self.slave:
+        if self._slave:
             self.uart.irq(handler=fn)
         else:
             self.master.on_notify(callback=fn)
@@ -46,7 +55,7 @@ class BlueComm(object):
         return self.uart.read().decode()
 
     def send(self,data):
-        if self.slave:
+        if self._slave:
             self.uart.write(data)
         else:
             self.master.write(data)
