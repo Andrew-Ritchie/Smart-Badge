@@ -31,8 +31,8 @@ class PongApp(app.GameApp):
         score2 = 0
         self.player_1 = self.add_sprite("Player1", 1, 16, 1, 10, typ="PADDLE")
         self.player_2 = self.add_sprite("Player2", 30, 16, 1, 10, typ="PADDLE")
-        self.add_sprite("wall", 0, 0, 32, 2)
-        self.add_sprite("wall", 0, 30, 32, 2)
+        self.add_sprite("wall", 0, 0, 32, 2, typ="WALL")
+        self.add_sprite("wall", 0, 30, 32, 2, typ="WALL")
         self.ball = Ball()
         self.add_custom_sprite(self.ball, 16, 16)
         self.tim = tim
