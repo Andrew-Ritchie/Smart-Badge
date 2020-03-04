@@ -11,22 +11,35 @@ MATERIAL_THEME = lv.theme_material_init(210, lv.font_roboto_16)
 DISP_SCALE_X = 5
 DISP_SCALE_Y = 4
 
-
 class App():
 
-    def __init__(self, name, display, th=NIGHT_THEME):
-        self.theme = th
-        self.group = lv.group_create()
-        lv.theme_set_current(self.theme)
-        self.scr = lv.obj()
-        self.name = name
+    def __init__(self, name, display, buttons, timer, **kwargs):        
         self.disp = display
+        self.buttons = buttons
+        self.tim = timer
+        # self.theme = th
+        self.group = lv.group_create()
+        # lv.theme_set_current(self.theme)
+        self.scr = lv.obj()        
+        self.name = name
         self.items = {}
         self.item_ids = {}
-        self.cont = w.Container(self.scr)
+        self.cont = w.Container(self.scr)        
+        self.set_buttons(kwargs.get("btn_left", lambda x: print("undefined left")),
+                         kwargs.get("btn_right", lambda x: print(
+                             "undefined right")),
+                         kwargs.get("btn_up", lambda x: print("undefined up")),
+                         kwargs.get("btn_down", lambda x: print(
+                             "undefined down")),
+                         kwargs.get("btn_a", lambda x: print("undefined a")),
+                         kwargs.get("btn_b", lambda x: print("undefined b")),
+                         kwargs.get("btn_x", lambda x: print("undefined x")),
+                         kwargs.get("btn_y", lambda x: print("undefined y")),
+                         )
 
     def set_title(self, title, font_size=None):
-        self.items['title'] = w.Label(self.cont, title, font_size=font_size)
+        self.items['title'] = w.Label(
+            self.cont.lv_obj, title, font_size=font_size)
 
     def load_screen(self):
         lv.scr_load(self.scr)
@@ -40,22 +53,42 @@ class App():
     def get_cont(self):
         return self.cont
 
+    def set_buttons(self, btn_left, btn_right, btn_up, btn_down, btn_a, btn_b, btn_x, btn_y):
+        self.buttons.left.set_callback_edge(btn_left)
+        self.buttons.right.set_callback_edge(btn_right)
+        self.buttons.up.set_callback_edge(btn_up)
+        self.buttons.down.set_callback_edge(btn_down)
+        # self.buttons.a.set_callback_edge(btn_a)
+        self.buttons.b.set_callback_edge(btn_b)
+        # self.buttons.x.set_callback_edge(btn_x)
+        self.buttons.y.set_callback_edge(btn_y)
+
 
 class GameApp():
 
-    def __init__(self, name, display, th=MATERIAL_THEME, debug = False, roll_over=False, border=False, kill=False):
+    def __init__(self, name, display, buttons, th=MATERIAL_THEME, debug=False, roll_over=False, border=False, kill=False, **kwargs):
+        self.disp = display
+        self.buttons = buttons
         self.theme = th
-        lv.theme_set_current(self.theme)
+        # lv.theme_set_current(self.theme)
         self.scr = lv.obj()
         self.name = name
-        self.disp = display
         self.game = g.Game(32, 32, debugger=debug)
         self.sprites = {}
         self.roll_over = roll_over
         self.border = border
         self.kill = kill
-        self.load_screen()
-        # self.draw_screen()
+        self.set_buttons(kwargs.get("btn_left", lambda x: print("undefined left")),
+                         kwargs.get("btn_right", lambda x: print(
+                             "undefined right")),
+                         kwargs.get("btn_up", lambda x: print("undefined up")),
+                         kwargs.get("btn_down", lambda x: print(
+                             "undefined down")),
+                         kwargs.get("btn_a", lambda x: print("undefined a")),
+                         kwargs.get("btn_b", lambda x: print("undefined b")),
+                         kwargs.get("btn_x", lambda x: print("undefined x")),
+                         kwargs.get("btn_y", lambda x: print("undefined y")),
+                         )
 
     def load_screen(self):
         lv.scr_load(self.scr)
@@ -121,3 +154,13 @@ class GameApp():
 
     def _debug(self, string):
         self.game._debug(string)
+
+    def set_buttons(self, btn_left, btn_right, btn_up, btn_down, btn_a, btn_b, btn_x, btn_y):
+        self.buttons.left.set_callback_edge(btn_left)
+        self.buttons.right.set_callback_edge(btn_right)
+        self.buttons.up.set_callback_edge(btn_up)
+        self.buttons.down.set_callback_edge(btn_down)
+        # self.buttons.a.set_callback_edge(btn_a)
+        self.buttons.b.set_callback_edge(btn_b)
+        # self.buttons.x.set_callback_edge(btn_x)
+        self.buttons.y.set_callback_edge(btn_y)
