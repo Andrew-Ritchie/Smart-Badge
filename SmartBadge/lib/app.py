@@ -1,7 +1,7 @@
 import lvgl as lv
-import widgets as w
-import icons as i
-import game as g
+import lib.screen.widgets as w
+import lib.screen.icons as i
+import lib.game.game as g
 import time as t
 
 NIGHT_THEME = lv.theme_night_init(210, lv.font_roboto_16)
@@ -10,7 +10,6 @@ MATERIAL_THEME = lv.theme_material_init(210, lv.font_roboto_16)
 
 DISP_SCALE_X = 5
 DISP_SCALE_Y = 4
-
 
 class App():
 
@@ -114,11 +113,10 @@ class GameApp():
             sprite.set_icon(i.PongBoard(self.scr, width*DISP_SCALE_X,
                                         height*DISP_SCALE_Y, x*DISP_SCALE_X, y*DISP_SCALE_Y))
         elif sprite.type == "WALL":
-            # sprite.set_icon(i.Grid(self.scr, width, height, x, y))
-            pass
+            sprite.set_icon(i.Wall(self.scr, width, height, x, y))
         else:
             print("Undefined sprite type requested, defaulting to grid of squares")
-            sprite.set_icon(i.Grid(self.scr, width, height, x, y))
+            sprite.set_icon(i.Wall(self.scr, width, height, x, y))
 
     def _add_spr(self, spr, x, y):
         self.sprites[spr.name] = spr

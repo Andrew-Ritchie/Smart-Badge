@@ -1,8 +1,7 @@
 import lvgl as lv
-from widgets import Label
+from lib.screen.widgets import *
 from settings import Settings
-from app import App
-import time as t
+from lib.app import App
 
 
 class NameApp(App):
@@ -16,10 +15,8 @@ class NameApp(App):
 
         first, nick, last = self.get_name()
 
-        self.add_item("firstname", Label(
-            cont.lv_obj, first))
-        self.add_item("nickname", Label(
-            cont.lv_obj, nick, font_size=28))
+        self.add_item("firstname", Label(cont.lv_obj, first))
+        self.add_item("nickname", Label(cont.lv_obj, nick, font_size=28))
         self.add_item("lastname", Label(cont.lv_obj, last))
 
         self.load_screen()

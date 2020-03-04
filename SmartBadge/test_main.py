@@ -4,9 +4,8 @@ import lvgl as lv
 from main_menu import MainMenuApp
 from name import NameApp
 from pong import PongApp
-from display import Display
-import sensors
-import time
+from lib.screen.display import Display
+import lib.ext.sensors as sensors
 from machine import Timer
 
 # Initialise LittlevGL -- for display
