@@ -17,6 +17,7 @@ class Container():
 
     def __init__(self, parent):
         self.lv_obj = lv.cont(parent)
+        self._set_custom_style()
         self.lv_obj.set_auto_realign(True)
         self.lv_obj.set_fit(lv.FIT.FLOOD)
         self.lv_obj.set_layout(lv.LAYOUT.PRETTY)
@@ -35,6 +36,14 @@ class Container():
 
     def get_width(self):
         return self.lv_obj.get_width()
+
+    def _set_custom_style(self):
+        style = lv.style_t()
+        lv.style_copy(style, self.lv_obj.get_style(lv.cont.STYLE.MAIN))
+        style.body.main_color = lv.color_make(0xC0, 0xC0, 0xC0)
+        style.body.grad_color = lv.color_make(0x4F, 0x52, 0x57)
+        style.body.radius = 0
+        self.lv_obj.set_style(lv.cont.STYLE.MAIN, style)
 
 
 class Label():
