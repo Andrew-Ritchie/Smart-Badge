@@ -194,4 +194,5 @@ class BLECentral:
 
     def write(self, data):
         if self._value_handle_rx is not None and self._conn_handle is not None:
+            print('gattc_write({},{},{})'.format(self._conn_handle, self._value_handle, data))
             self._ble.gattc_write(self._conn_handle, self._value_handle_rx, data)

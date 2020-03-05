@@ -29,7 +29,6 @@ class BLEUART:
         self._handler = None
         # Optionally add services=[_UART_UUID], but this is likely to make the payload too large.
         self._payload = advertising_payload(name='SB', services=[_UART_UUID])
-        print('payload len:', len(self._payload))
         self._advertise()
 
     def irq(self, handler):
