@@ -6,7 +6,7 @@ import machine
 # Temporary
 import time
 
-class BlueComm(object):
+class _BlueComm(object):
 
     def __init__(self):
         self.ble = bluetooth.BLE()
@@ -20,10 +20,7 @@ class BlueComm(object):
     def send(self,data):
         self.comm.write(data)
 
-    # def __exit__(self):
-    #     self.uart.close()
-
-class BlueCommMaster(BlueComm):
+class BlueCommMaster(_BlueComm):
 
     def __init__(self):
         super().__init__()
@@ -53,8 +50,11 @@ class BlueCommMaster(BlueComm):
         """
         return self.comm.detected_devices()
 
-class BlueCommSlave(BlueComm):
+class BlueCommSlave(_BlueComm):
 
     def __init__(self):
         super().__init__()
         self.comm = bleuart.BLEUART(self.ble, name=self.display_name)
+
+    def __exit__(self):
+        self.comm.close()
