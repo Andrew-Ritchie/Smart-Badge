@@ -36,7 +36,7 @@ _UART_TX = (bluetooth.UUID('6E400003-B5A3-F393-E0A9-E50E24DCCA9E'), bluetooth.FL
 _UART_RX = (bluetooth.UUID('6E400002-B5A3-F393-E0A9-E50E24DCCA9E'), bluetooth.FLAG_WRITE,)
 _UART_SERVICE = (_UART_UUID, (_UART_TX, _UART_RX,),)
 
-class BLETemperatureCentral:
+class BLECentral:
     def __init__(self, ble):
         self._ble = ble
         self._ble.active(True)
@@ -62,6 +62,10 @@ class BLETemperatureCentral:
         # Persistent callback for when new data is notified from the device.
         self._notify_callback = None
 
+        # Detected devices
+        self._detected_devices = []
+        self._scan_complete = False
+
         # Connected device.
         self._conn_handle = None
         self._value_handle = None
@@ -72,22 +76,17 @@ class BLETemperatureCentral:
         if event == _IRQ_SCAN_RESULT:
             addr_type, addr, connectable, rssi, adv_data = data
             decoded_name = decode_name(adv_data)
-            if decoded_name[:5] == "Badge": # Check if the advertised name starts with "Badge"
+            decoded_services = decode_services(adv_data)
+            if _UART_UUID in decoded_services:
                 # Found a potential device, remember it and stop scanning.
                 self._addr_type = addr_type
                 self._addr = bytes(addr) # Note: The addr buffer is owned by modbluetooth, need to copy it.
                 self._name = decode_name(adv_data) or '?'
-                self._ble.gap_scan(None)
+                if (self._addr_type, self._addr) not in self._detected_devices:
+                    self._detected_devices.append((self._addr_type, self._addr))
 
         elif event == _IRQ_SCAN_COMPLETE:
-            if self._scan_callback:
-                if self._addr:
-                    # Found a device during the scan (and the scan was explicitly stopped).
-                    self._scan_callback(self._addr_type, self._addr, self._name)
-                    self._scan_callback = None
-                else:
-                    # Scan timed out.
-                    self._scan_callback(None, None, None)
+            self._scan_complete = True
 
         elif event == _IRQ_PERIPHERAL_CONNECT:
             # Connect successful.
@@ -131,7 +130,6 @@ class BLETemperatureCentral:
                     self._read_callback = None
 
         elif event == _IRQ_GATTC_NOTIFY:
-            # The ble_temperature.py demo periodically notifies its value.
             conn_handle, value_handle, notify_data = data
             if conn_handle == self._conn_handle and value_handle == self._value_handle:
                 self._update_value(notify_data)
@@ -146,10 +144,18 @@ class BLETemperatureCentral:
 
     # Find a device advertising the environmental sensor service.
     def scan(self, callback=None):
+        # If starting a new scan delete the prev. found devices
+        if self._scan_complete:
+            self._detected_devices = []
+            self._scan_complete = False
+
         self._addr_type = None
         self._addr = None
         self._scan_callback = callback
         self._ble.gap_scan(2000, 30000, 30000)
+
+    def detected_devices(self):
+        return self._detected_devices
 
     # Connect to the specified device (otherwise use cached address from a scan).
     def connect(self, addr_type=None, addr=None, callback=None):
@@ -176,12 +182,11 @@ class BLETemperatureCentral:
         self._ble.gattc_read(self._conn_handle, self._value_handle)
 
     # Sets a callback to be invoked when the device notifies us.
-    def on_notify(self, callback):
-        self._notify_callback = callback
+    def irq(self, handler):
+        self._notify_callback = handler
 
     def _update_value(self, data):
-        # Data is sint16 in degrees Celsius with a resolution of 0.01 degrees Celsius.
-        self._value = data#struct.unpack('<h', data)[0] / 100
+        self._value = data
         return self._value
 
     def value(self):
@@ -190,47 +195,3 @@ class BLETemperatureCentral:
     def write(self, data):
         if self._value_handle_rx is not None and self._conn_handle is not None:
             self._ble.gattc_write(self._conn_handle, self._value_handle_rx, data)
-
-
-def demo():
-    ble = bluetooth.BLE()
-    central = BLETemperatureCentral(ble)
-
-    not_found = False
-
-    def on_scan(addr_type, addr, name):
-        if addr_type is not None:
-            print('Found sensor:', addr_type, addr, name)
-            central.connect()
-        else:
-            nonlocal not_found
-            not_found = True
-            print('No sensor found.')
-
-    central.scan(callback=on_scan)
-    central.on_notify(callback=lambda val: print(val))
-
-    # Wait for connection...
-    while not central.is_connected():
-        time.sleep_ms(100)
-        if not_found:
-            return
-
-    print('Connected')
-
-    central.write("Hey there!")
-
-    # Explicitly issue reads, using "print" as the callback.
-    while central.is_connected():
-        central.read(callback=print)
-        time.sleep_ms(2000)
-
-    # Alternative to the above, just show the most recently notified value.
-    # while central.is_connected():
-    #     print(central.value())
-    #     time.sleep_ms(2000)
-
-    print('Disconnected')
-
-if __name__ == '__main__':
-    demo()

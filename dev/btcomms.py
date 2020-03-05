@@ -8,57 +8,53 @@ import time
 
 class BlueComm(object):
 
-    def __init__(self, slave=True):
+    def __init__(self):
         self.ble = bluetooth.BLE()
-        self._slave = slave
-
-        if self._slave:
-            display_name = 'Badge-'+''.join(['{:02x}'.format(b) for b in machine.unique_id()])
-            self.uart = bleuart.BLEUART(self.ble, name=display_name)
-        else:
-            self.master = blemaster.BLETemperatureCentral(self.ble)
-
-    def scan(self):
-        if self._slave:
-            return None
-        else:
-            detected_devices = []
-
-            def on_scan(addr_type, addr, name):
-                if addr_type is not None:
-                    nonlocal detected_devices
-                    detected_devices.append((self.master._addr_type, self.master._addr))
-                    print(detected_devices)
-                    #self.master.connect()
-
-            self.master.scan(callback=on_scan)
-            return detected_devices
-
-    def connect(self, addr_type, addr):
-        if not self._slave:
-            self.master._addr_type = addr_type
-            self.master._addr = addr
-
-            self.master.connect()
-
-            # Wait for connection...
-            while not self.master.is_connected():
-                time.sleep_ms(100)
+        # self.display_name = 'Badge-'+''.join(['{:02x}'.format(b) for b in machine.unique_id()])
+        self.display_name = ''.join(['{:02x}'.format(b) for b in machine.unique_id()])
+        self.display_name = self.display_name[-4:]
 
     def irq(self,fn):
-        if self._slave:
-            self.uart.irq(handler=fn)
-        else:
-            self.master.on_notify(callback=fn)
-
-    def read_data(self):
-        return self.uart.read().decode()
+        self.comm.irq(handler=fn)
 
     def send(self,data):
-        if self._slave:
-            self.uart.write(data)
-        else:
-            self.master.write(data)
+        self.comm.write(data)
 
-    def __exit__(self):
-        self.uart.close()
+    # def __exit__(self):
+    #     self.uart.close()
+
+class BlueCommMaster(BlueComm):
+
+    def __init__(self):
+        super().__init__()
+        self.comm = blemaster.BLECentral(self.ble)
+
+    def connect(self, addr_type, addr):
+        """Connect to a discovered device
+        Provide with element from list returned by `detected_devices()`
+        e.g. `foo.connect(*foo.detected_devices()[0])`
+        """
+        self.comm._addr_type = addr_type
+        self.comm._addr = addr
+
+        self.comm.connect()
+
+        # Wait for connection...
+        while not self.comm.is_connected():
+            time.sleep_ms(100)
+
+    def scan(self):
+        self.comm.scan()
+
+    def detected_devices(self):
+        """Returns list of detected devices
+        Format:
+            (<addr_type>, <addr>)
+        """
+        return self.comm.detected_devices()
+
+class BlueCommSlave(BlueComm):
+
+    def __init__(self):
+        super().__init__()
+        self.comm = bleuart.BLEUART(self.ble, name=self.display_name)
