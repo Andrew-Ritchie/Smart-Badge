@@ -73,7 +73,7 @@ class Label():
 class Button():
 
     def __init__(self, parent, text=None, font_size=None, x=0, y=0, width=None, height=None, app=None):
-        self.lv_obj = lv.btn(parent)
+        self.lv_obj = lv.btn(parent)        
         self.parent = parent
         self.x = x
         self.y = y
@@ -254,34 +254,13 @@ class Image(lv.img):
     def centralise(self):
         self.align(None, lv.ALIGN.CENTER, 0, 0)
 
-<<<<<<< HEAD
-class Table():
-    def __init__(self, parent, rows, cols, x=0, y=0):
-        self.lv_obj = lv.table(parent)
-        self.parent = parent
-        self.rows = rows
-        self.cols = cols
-        self.x = x
-        self.y = y
-        self.lv_obj.set_col_cnt(cols)
-        self.lv_obj.set_row_cnt(rows)
-
-    def set_cell_content(self, row, col, content):
-        self.lv_obj.set_cell_value(row, col, content)
-=======
->>>>>>> 4e17434ac1107821c7d121c767ae60bda567b1e1
 
 class Circle(lv.obj):
 
     def __init__(self, parent, width, height, x, y):
         super().__init__(parent)
-<<<<<<< HEAD
-        self.set_size(width,height)
-        self.set_pos(x,y)
-=======
         self.set_size(width, height)
         self.set_pos(x, y)
->>>>>>> 4e17434ac1107821c7d121c767ae60bda567b1e1
 
         self.circle_style = lv.style_t()
         lv.style_copy(self.circle_style, lv.style_plain)

@@ -6,7 +6,9 @@ import lvgl as lv
 import time
 from display import Display
 
-
+def event_handler(obj, event):
+    if event == lv.EVENT.CLICKED:
+        print("Clicked: %s" % lv.list.get_btn_text(obj))
 
 class Timetable(s.Settings):
     def __init__(self):
@@ -22,8 +24,12 @@ class TimtableApp(app.App):
     def __init__(self, disp):
         super().__init__(name="Timetable", display=disp)
         self.cont = self.get_cont()
-        self.add_item("name", w.Table(self.cont, 3, 3))
-
+        #self.add_item("name", w.Table(self.cont, 3, 3))
+        list1 = lv.list(lv.scr_act())
+        list1.set_size(160, 200)
+        list1.align(None, lv.ALIGN.CENTER, 0, 0)
+        list_btn = list1.add_btn(lv.SYMBOL.FILE, "New")
+        list_btn.set_event_cb(event_handler)
 
 
 

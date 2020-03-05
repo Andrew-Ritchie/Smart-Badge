@@ -1,6 +1,6 @@
 import lvgl as lv
-from widgets import Button
-from app import App
+from lib.screen.widgets import Button
+from lib.app import App
 from name import NameApp
 from pong import PongApp
 

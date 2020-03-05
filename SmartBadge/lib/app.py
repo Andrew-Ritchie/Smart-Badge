@@ -1,7 +1,7 @@
 import lvgl as lv
-import widgets as w
-import icons as i
-import game as g
+import lib.screen.widgets as w
+import lib.screen.icons as i
+import lib.game.game as g
 import time as t
 
 NIGHT_THEME = lv.theme_night_init(210, lv.font_roboto_16)
@@ -11,21 +11,20 @@ MATERIAL_THEME = lv.theme_material_init(210, lv.font_roboto_16)
 DISP_SCALE_X = 5
 DISP_SCALE_Y = 4
 
-
 class App():
 
-    def __init__(self, name, display, buttons, timer, **kwargs):
+    def __init__(self, name, display, buttons, timer, **kwargs):        
         self.disp = display
         self.buttons = buttons
         self.tim = timer
         # self.theme = th
         self.group = lv.group_create()
         # lv.theme_set_current(self.theme)
-        self.scr = lv.obj()
+        self.scr = lv.obj()        
         self.name = name
         self.items = {}
         self.item_ids = {}
-        self.cont = w.Container(self.scr)
+        self.cont = w.Container(self.scr)        
         self.set_buttons(kwargs.get("btn_left", lambda x: print("undefined left")),
                          kwargs.get("btn_right", lambda x: print(
                              "undefined right")),
@@ -54,16 +53,27 @@ class App():
     def get_cont(self):
         return self.cont
 
+    def set_buttons(self, btn_left, btn_right, btn_up, btn_down, btn_a, btn_b, btn_x, btn_y):
+        self.buttons.left.set_callback_edge(btn_left)
+        self.buttons.right.set_callback_edge(btn_right)
+        self.buttons.up.set_callback_edge(btn_up)
+        self.buttons.down.set_callback_edge(btn_down)
+        # self.buttons.a.set_callback_edge(btn_a)
+        self.buttons.b.set_callback_edge(btn_b)
+        # self.buttons.x.set_callback_edge(btn_x)
+        self.buttons.y.set_callback_edge(btn_y)
+
 
 class GameApp():
 
-    def __init__(self, name, display, th=MATERIAL_THEME, roll_over=False, border=False, kill=False):
+    def __init__(self, name, display, buttons, th=MATERIAL_THEME, debug=False, roll_over=False, border=False, kill=False, **kwargs):
+        self.disp = display
+        self.buttons = buttons
         self.theme = th
-        lv.theme_set_current(self.theme)
+        # lv.theme_set_current(self.theme)
         self.scr = lv.obj()
         self.name = name
-        self.disp = display
-        self.game = g.Game(32, 32)
+        self.game = g.Game(32, 32, debugger=debug)
         self.sprites = {}
         self.roll_over = roll_over
         self.border = border
@@ -103,11 +113,10 @@ class GameApp():
             sprite.set_icon(i.PongBoard(self.scr, width*DISP_SCALE_X,
                                         height*DISP_SCALE_Y, x*DISP_SCALE_X, y*DISP_SCALE_Y))
         elif sprite.type == "WALL":
-            # sprite.set_icon(i.Grid(self.scr, width, height, x, y))
-            pass
+            sprite.set_icon(i.Wall(self.scr, width, height, x, y))
         else:
             print("Undefined sprite type requested, defaulting to grid of squares")
-            sprite.set_icon(i.Grid(self.scr, width, height, x, y))
+            sprite.set_icon(i.Wall(self.scr, width, height, x, y))
 
     def _add_spr(self, spr, x, y):
         self.sprites[spr.name] = spr
