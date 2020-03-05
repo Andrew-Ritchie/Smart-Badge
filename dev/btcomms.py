@@ -1,5 +1,5 @@
 import ble_uart_peripheral as bleuart
-import ble_temperature_central as blemaster
+import ble_central
 import bluetooth
 import machine
 
@@ -27,7 +27,7 @@ class BlueCommMaster(BlueComm):
 
     def __init__(self):
         super().__init__()
-        self.comm = blemaster.BLECentral(self.ble)
+        self.comm = ble_central.BLECentral(self.ble)
 
     def connect(self, addr_type, addr):
         """Connect to a discovered device
