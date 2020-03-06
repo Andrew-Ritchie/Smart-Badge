@@ -10,9 +10,7 @@ class _BlueComm(object):
 
     def __init__(self):
         self.ble = bluetooth.BLE()
-        # self.display_name = 'Badge-'+''.join(['{:02x}'.format(b) for b in machine.unique_id()])
-        self.display_name = ''.join(['{:02x}'.format(b) for b in machine.unique_id()])
-        self.display_name = self.display_name[-4:]
+        self.display_name = 'SB'
 
     def irq(self,fn):
         self.comm.irq(handler=fn)
@@ -45,10 +43,13 @@ class BlueCommMaster(_BlueComm):
 
     def detected_devices(self):
         """Returns list of detected devices
+        (Blocking call; waits for scan to terminate)
         Format:
             (<addr_type>, <addr>)
         """
-        return self.comm.detected_devices()
+        while not bt.comm._scan_complete:
+            ds = self.comm.detected_devices()
+        return ds
 
 class BlueCommSlave(_BlueComm):
 
