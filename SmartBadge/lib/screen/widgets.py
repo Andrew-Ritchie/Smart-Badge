@@ -73,7 +73,7 @@ class Label():
 class Button():
 
     def __init__(self, parent, text=None, font_size=None, x=0, y=0, width=None, height=None, app=None):
-        self.lv_obj = lv.btn(parent)        
+        self.lv_obj = lv.btn(parent)
         self.parent = parent
         self.x = x
         self.y = y
@@ -269,3 +269,12 @@ class Circle(lv.obj):
 
     def move(self, x, y):
         self.set_pos(x, y)
+
+class List():
+
+    def __init__(self,parent):
+        self.lv_obj = lv.list(parent)
+        self.lv_obj.set_size(160,200)
+        self.lv_obj.align(None, lv.ALIGN.CENTER, 0, 0)
+        list_btn = list1.add_btn(lv.SYMBOL.FILE, "New")
+        self.list_btn.set_event_cb(event_handler)
