@@ -1,4 +1,4 @@
-import btcomms
+import lib.ext.bt.btcomms as btcomms
 
 bt = btcomms.BlueCommMaster()
 bt.irq(lambda data: print('Received:', data))

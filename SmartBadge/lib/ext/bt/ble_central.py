@@ -6,7 +6,7 @@ import struct
 import time
 import micropython
 
-from ble_advertising import decode_services, decode_name
+from lib.ext.bt.ble_advertising import decode_services, decode_name
 
 from micropython import const
 _IRQ_CENTRAL_CONNECT                 = const(1 << 0)

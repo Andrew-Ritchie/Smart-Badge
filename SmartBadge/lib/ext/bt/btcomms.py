@@ -1,5 +1,5 @@
-import ble_uart_peripheral as bleuart
-import ble_central
+import lib.ext.bt.ble_uart_peripheral as bleuart
+import lib.ext.bt.ble_central as ble_central
 import bluetooth
 import machine
 
@@ -47,7 +47,7 @@ class BlueCommMaster(_BlueComm):
         Format:
             (<addr_type>, <addr>)
         """
-        while not bt.comm._scan_complete:
+        while not self.comm._scan_complete:
             ds = self.comm.detected_devices()
         return ds
 
