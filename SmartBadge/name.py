@@ -9,7 +9,7 @@ class NameApp(App):
     def __init__(self, disp, buttons, tim):
         super().__init__(name="Name", display=disp, buttons=buttons,
                          timer=tim,
-                         btn_b=self.btn_b)
+                         btn_y=self.btn_y)
         cont = self.get_cont()
         cont.set_center()
 
@@ -25,6 +25,6 @@ class NameApp(App):
         settings = Settings("settings.json")
         return settings.get_str_name_and_nickname().split(" ")
 
-    def btn_b(self, x):
+    def btn_y(self, x):
         from main_menu import MainMenuApp
         mm = MainMenuApp(self.disp, self.buttons, self.tim)

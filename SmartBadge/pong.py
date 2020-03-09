@@ -6,6 +6,7 @@ import time as t
 import random as r
 from machine import Timer
 
+
 class Ball(g.Sprite):
 
     def __init__(self):
@@ -17,7 +18,64 @@ class Ball(g.Sprite):
         self.direction = [[-1, 1][r.randint(0, 1)], r.randint(-1, 1)]
 
 
-class PongApp(app.GameApp):
+class PongMenuApp(app.App):
+
+    def __init__(self, disp, buttons, tim):
+        super().__init__(name="Pong Menu", display=disp, buttons=buttons, timer=tim,
+                         btn_left=self.btn_left,
+                         btn_right=self.btn_right,
+                         btn_b=self.btn_b,
+                         btn_y=self.btn_y)
+        self.set_title("Pong", font_size=28)
+
+        cont = self.get_cont()
+
+        self.add_item("load_game", Button(
+            cont.lv_obj, text="Load Game", app=PongGameApp), selectable=True)
+        self.add_item("high_scores", Button(
+            cont.lv_obj, text="High Scores", app=PongScoresApp), selectable=True)
+
+        self.load_screen()
+
+    def btn_left(self, x):
+        lv.group_focus_prev(self.group)
+
+    def btn_right(self, x):
+        lv.group_focus_next(self.group)
+
+    def btn_b(self, x):
+        focused = lv.group_get_focused(self.group)
+        app = self.item_ids[id(focused)].app_name
+        ac_app = app(self.disp, self.buttons, self.tim)
+
+    def btn_y(self, x):
+        from main_menu import MainMenuApp
+        MainMenuApp(self.disp, self.buttons, self.tim)
+
+
+class PongScoresApp(app.App):
+
+    def __init__(self, disp, buttons, tim):
+        super().__init__(name="Pong Scores", display=disp, buttons=buttons, timer=tim,
+                         btn_y=self.btn_y)
+        self.set_title("High Scores", font_size=28)
+
+        cont = self.get_cont()
+
+        self.add_item("ashwin", Label(cont.lv_obj, "Ashwin"))
+        self.add_item("miklas", Label(cont.lv_obj, "Miklas"))
+        self.add_item("conor", Label(cont.lv_obj, "Conor"))
+        self.add_item("andrew", Label(cont.lv_obj, "Andrew"))
+        self.add_item("anwen", Label(cont.lv_obj, "Anwen"))
+        self.add_item("martin", Label(cont.lv_obj, "Martin"))
+
+        self.load_screen()
+
+    def btn_y(self, x):
+        PongMenuApp(self.disp, self.buttons, self.tim)
+
+
+class PongGameApp(app.GameApp):
 
     def __init__(self, disp, buttons, tim):
 
@@ -26,7 +84,7 @@ class PongApp(app.GameApp):
                          btn_right=self.btn_right,
                          btn_up=self.btn_up,
                          btn_down=self.btn_down,
-                         btn_b=self.btn_b)
+                         btn_y=self.btn_y)
         score1 = 0
         score2 = 0
         self.player_1 = self.add_sprite("Player1", 1, 16, 1, 10, typ="PADDLE")
@@ -38,7 +96,8 @@ class PongApp(app.GameApp):
         self.tim = tim
 
         self.load_screen()
-        tim.init(period=250, mode=Timer.PERIODIC,callback=lambda t: self.move_ball())
+        tim.init(period=250, mode=Timer.PERIODIC,
+                 callback=lambda t: self.move_ball())
 
     def bounce_ball(self):
         Right = self.game.collision_edge(self.ball, 0, 1)
@@ -97,6 +156,5 @@ class PongApp(app.GameApp):
     def btn_right(self, x):
         self.move_sprite("Player2", 0, -1)
 
-    def btn_b(self, x):
-        from main_menu import MainMenuApp
-        mm = MainMenuApp(self.disp, self.buttons, self.tim)
+    def btn_y(self, x):
+        PongMenuApp(self.disp, self.buttons, self.tim)
