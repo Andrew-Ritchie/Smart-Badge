@@ -5,6 +5,7 @@ import lib.game.game as g
 import time as t
 import random as r
 from machine import Timer
+from settings import HighScores
 
 
 class Ball(g.Sprite):
@@ -62,14 +63,17 @@ class PongScoresApp(app.App):
 
         cont = self.get_cont()
 
-        self.add_item("ashwin", Label(cont.lv_obj, "Ashwin"))
-        self.add_item("miklas", Label(cont.lv_obj, "Miklas"))
-        self.add_item("conor", Label(cont.lv_obj, "Conor"))
-        self.add_item("andrew", Label(cont.lv_obj, "Andrew"))
-        self.add_item("anwen", Label(cont.lv_obj, "Anwen"))
-        self.add_item("martin", Label(cont.lv_obj, "Martin"))
+        first, second, third = self.get_high_scores()
+
+        self.add_item("first", Label(cont.lv_obj, first))
+        self.add_item("second", Label(cont.lv_obj, second))
+        self.add_item("third", Label(cont.lv_obj, third))
 
         self.load_screen()
+
+    def get_high_scores(self):
+        scores = HighScores("high_scores.json", "pong")
+        return scores.get_top_three().split(" ")
 
     def btn_y(self, x):
         PongMenuApp(self.disp, self.buttons, self.tim)
@@ -96,8 +100,8 @@ class PongGameApp(app.GameApp):
         self.tim = tim
 
         self.load_screen()
-        tim.init(period=250, mode=Timer.PERIODIC,
-                 callback=lambda t: self.move_ball())
+        self.tim.init(period=250, mode=Timer.PERIODIC,
+                      callback=lambda t: self.move_ball())
 
     def bounce_ball(self):
         Right = self.game.collision_edge(self.ball, 0, 1)
@@ -157,4 +161,5 @@ class PongGameApp(app.GameApp):
         self.move_sprite("Player2", 0, -1)
 
     def btn_y(self, x):
+        self.tim.deinit()
         PongMenuApp(self.disp, self.buttons, self.tim)
