@@ -111,29 +111,36 @@ class PongGameApp(app.GameApp):
 
         if (self.ball.x + self.ball.width == 29 or self.ball.x - self.ball.width == 3):
             if self.ball.y + self.ball.height == 29:
-                self.ball.direction[1] = -2 - r.randint(0, 5)
+                self.ball.direction[1] = -2 
             elif self.ball.y - self.ball.height == 3:
-                self.ball.direction[1] = 2 + r.randint(0, 5)
+                self.ball.direction[1] = 2 
         else:
             if Right:
                 self.ball.direction[0] = -1
 
-                if self.ball.y > self.player_2.y + self.player_2.height//2 + 1:
+                if self.ball.y > self.player_2.y + 2*self.player_2.height//3:
+                    print("hit right, going down")
                     self.ball.direction[1] = 1
-                if self.ball.y < self.player_2.y + self.player_2.height//2 - 1:
-                    self.ball.direction[1] = -1
-                else:
+                elif self.ball.y > self.player_2.y + self.player_2.height//3 :
+                    print("seems to think it hit the F***king middle, going across")
                     self.ball.direction[1] = 0
+                else:
+                    print("hit right, going up")
+                    print("seems to think it hit the F***king middle, going across")
+                    self.ball.direction[1] = -1
 
             elif Left:
                 self.ball.direction[0] = 1
 
-                if self.ball.y > self.player_1.y + self.player_1.height//2 + 1:
+                if self.ball.y > self.player_1.y + 2*self.player_1.height//3:
+                    print("hit left, going up")
                     self.ball.direction[1] = 1
-                if self.ball.y < self.player_1.y + self.player_1.height//2 - 1:
-                    self.ball.direction[1] = -1
+                elif self.ball.y > self.player_1.y +  self.player_1.height//3:
+                    print("seems to think it hit the F***king middle, going across")
+                    self.ball.direction[1] = 0 
                 else:
-                    self.ball.direction[1] = 0
+                    print("hit left, going down")
+                    self.ball.direction[1] = -1
 
             elif Up:
                 self.ball.direction[1] = -1
