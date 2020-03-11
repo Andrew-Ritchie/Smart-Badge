@@ -16,6 +16,8 @@ class Ball(g.Sprite):
         self.direction = [1, 1]
 
     def reset(self):
+        self.x = 16
+        self.y = 16
         self.direction = [[-1, 1][r.randint(0, 1)], r.randint(-1, 1)]
 
 
@@ -89,8 +91,8 @@ class PongGameApp(app.GameApp):
                          btn_up=self.btn_up,
                          btn_down=self.btn_down,
                          btn_y=self.btn_y)
-        score1 = 0
-        score2 = 0
+        self.score1 = 0
+        self.score2 = 0
         self.player_1 = self.add_sprite("Player1", 1, 16, 1, 10, typ="PADDLE")
         self.player_2 = self.add_sprite("Player2", 30, 16, 1, 10, typ="PADDLE")
         self.add_sprite("wall", 0, 0, 32, 2, typ="WALL")
@@ -98,8 +100,9 @@ class PongGameApp(app.GameApp):
         self.ball = Ball()
         self.add_custom_sprite(self.ball, 16, 16)
         self.tim = tim
+        self.game_over = False
 
-        self.scores = Label(self.scr, "0-0", font_size=28)
+        self.scores = Label(self.scr, "{s1}-{s2}".format(s1 = self.score1, s2 = self.score2), font_size=28)
         # lv.task_create(self.move_ball, 10, lv.TASK_PRIO.LOWEST, {})
 
         self.load_screen()
@@ -107,49 +110,65 @@ class PongGameApp(app.GameApp):
                       callback=lambda t: self.move_ball())
 
     def bounce_ball(self):
-        Right = self.game.collision_edge(self.ball, 0, 1)
-        Left = self.game.collision_edge(self.ball, 0, -1)
-        Up = self.game.collision_edge(self.ball, 1, 1)
-        Down = self.game.collision_edge(self.ball, 1, -1)
+        if not self.game_over:
 
-        if (self.ball.x + self.ball.width == 29 or self.ball.x - self.ball.width == 3):
-            if self.ball.y + self.ball.height == 29:
-                self.ball.direction[1] = -2 
-            elif self.ball.y - self.ball.height == 3:
-                self.ball.direction[1] = 2 
-        else:
-            if Right:
-                self.ball.direction[0] = -1
-
-                if self.ball.y > self.player_2.y + 2*self.player_2.height//3:
-                    self.ball.direction[1] = 1
-                elif self.ball.y > self.player_2.y + self.player_2.height//3:
-                    self.ball.direction[1] = 0
+            Right = self.game.collision_edge(self.ball, 0, 1)
+            Left = self.game.collision_edge(self.ball, 0, -1)
+            Up = self.game.collision_edge(self.ball, 1, 1)
+            Down = self.game.collision_edge(self.ball, 1, -1)
+        
+            if self.ball.x <= - self.ball.width or  self.ball.x >= 32 + self.ball.width:
+                if self.ball.x <= - self.ball.width:
+                    self.score1 += 1
+                elif self.ball.x >= 32 + self.ball.width: 
+                    self.score2 += 1
+                    self.scores
+                if self.score1 == 10: 
+                    self.scores.update_text("Game over --- {s1}-{s2} --- {p} wins!".format(s1 = self.score1, s2 = self.score2, p="P1"))
+                    self.game_over = True
+                elif self.score2 == 10:
+                    self.scores.update_text("Game over --- {s1}-{s2} --- {p} wins!".format(s1 = self.score1, s2 = self.score2,p="P2"))
+                    self.game_over = True
                 else:
-                    self.ball.direction[1] = -1
-
-            elif Left:
-                self.ball.direction[0] = 1
-
-                if self.ball.y > self.player_1.y + 2*self.player_1.height//3:
-                    self.ball.direction[1] = 1
-                elif self.ball.y > self.player_1.y + self.player_1.height//3:
-                    self.ball.direction[1] = 0
+                    self.scores.update_text("{s1}-{s2}".format(s1 = self.score1, s2 = self.score2))
+                    self.ball.reset()
+            else:
+                if (self.ball.x + self.ball.width == 29 or self.ball.x - self.ball.width == 3):
+                    if self.ball.y + self.ball.height == 29:
+                        self.ball.direction[1] = -2 
+                    elif self.ball.y - self.ball.height == 3:
+                        self.ball.direction[1] = 2 
                 else:
-                    self.ball.direction[1] = -1
+                    if Right:
+                        self.ball.direction[0] = -1
 
-            elif Up:
-                self.ball.direction[1] = -1
-            elif Down:
-                self.ball.direction[1] = 1
+                        if self.ball.y > self.player_2.y + 2*self.player_2.height//3:
+                            self.ball.direction[1] = 1
+                        elif self.ball.y > self.player_2.y + self.player_2.height//3:
+                            self.ball.direction[1] = 0
+                        else:
+                            self.ball.direction[1] = -1
 
-        return "Collision at Right:{R},Left:{L},Up:{U},Down:{D}".format(R=Right, L=Left, U=Up, D=Down)
+                    elif Left:
+                        self.ball.direction[0] = 1
 
+                        if self.ball.y > self.player_1.y + 2*self.player_1.height//3:
+                            self.ball.direction[1] = 1
+                        elif self.ball.y > self.player_1.y + self.player_1.height//3:
+                            self.ball.direction[1] = 0
+                        else:
+                            self.ball.direction[1] = -1
+
+                    elif Up:
+                        self.ball.direction[1] = -1
+                    elif Down:
+                        self.ball.direction[1] = 1
+
+            #return "Collision at Right:{R},Left:{L},Up:{U},Down:{D}".format(R=Right, L=Left, U=Up, D=Down)
     def move_ball(self):
-        s = self.bounce_ball()
-        self.move_sprite(
-            "ball", self.ball.direction[0], self.ball.direction[1])
-        return s
+        self.bounce_ball()
+        if not self.game_over:
+            self.move_sprite("ball", self.ball.direction[0], self.ball.direction[1])
 
     def btn_up(self, x):
         self.move_sprite("Player1", 0, 1)
