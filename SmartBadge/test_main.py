@@ -3,7 +3,6 @@
 import lvgl as lv
 from main_menu import MainMenuApp
 from name import NameApp
-from pong import PongApp
 from lib.screen.display import Display
 import lib.ext.sensors as sensors
 from machine import Timer
