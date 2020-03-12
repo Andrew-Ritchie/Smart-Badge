@@ -119,10 +119,9 @@ class PongGameApp(app.GameApp):
         
             if self.ball.x <= - self.ball.width or  self.ball.x >= 32 + self.ball.width:
                 if self.ball.x <= - self.ball.width:
-                    self.score1 += 1
-                elif self.ball.x >= 32 + self.ball.width: 
                     self.score2 += 1
-                    self.scores
+                elif self.ball.x >= 32 + self.ball.width: 
+                    self.score1 += 1
                 if self.score1 == 10: 
                     self.scores.update_text("Game over --- {s1}-{s2} --- {p} wins!".format(s1 = self.score1, s2 = self.score2, p="P1"))
                     self.game_over = True
