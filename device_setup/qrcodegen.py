@@ -14,7 +14,7 @@ class ContactGenerator():
     def __init__(self, name, displayname, email, phone):
         qr = helpers.make_vcard(
             name=name, displayname=displayname, email=email, phone=phone)
-        qr.save("{}.png".format(name), scale=4)
+        qr.save("{}.png".format(name), scale=2)
 
 
 github = URLGenerator(
