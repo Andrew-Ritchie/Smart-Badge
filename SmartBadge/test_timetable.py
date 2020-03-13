@@ -1,7 +1,7 @@
 # RELIES ON LITTLEVGL FIRMWARE BEING FLASHED ON ESP32
 
 import lvgl as lv
-from timetable import TimetableApp
+from newtimetable import TimeTableApp
 from lib.screen.display import Display
 import lib.ext.sensors as sensors
 from machine import Timer
@@ -16,4 +16,4 @@ buttons = sensors.Buttons(up=27, down=33, left=25,
                           right=12, a=35, b=26, x=34, y=32)
 
 tim = Timer(-1)
-TimetableApp(disp, buttons, tim)
+TimeTableApp(disp, buttons, tim)

@@ -72,7 +72,7 @@ class Label():
 
 class Button():
 
-    def __init__(self, parent, text=None, font_size=None, x=0, y=0, width=None, height=None, app=None):
+    def __init__(self, parent, text=None, font_size=None, x=0, y=0, width=None, height=None, app=None, subject=None):
         self.lv_obj = lv.btn(parent)
         self.parent = parent
         self.x = x
@@ -82,6 +82,9 @@ class Button():
         self.lv_obj.set_size(self.width, self.height)
         self.lv_obj.set_pos(x, y)
         self.label = None
+        if subject:
+            self.subject = subject
+
         if text:
             self.set_text(text, font_size)
         if app:
