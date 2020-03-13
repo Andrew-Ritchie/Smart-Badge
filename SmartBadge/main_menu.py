@@ -2,7 +2,8 @@ import lvgl as lv
 from lib.screen.widgets import Button
 from lib.app import App
 from name import NameApp
-from pong import PongApp
+from pong import PongMenuApp
+from maze import MazeMenuApp
 
 
 class MainMenuApp(App):
@@ -19,9 +20,9 @@ class MainMenuApp(App):
         self.add_item("timetable", Button(cont.lv_obj, text="Timetable",
                                           width=cont.half(), app="timetable"), selectable=True)
         self.add_item("maze_game", Button(cont.lv_obj, text="Maze Game",
-                                          width=cont.half(), app="maze_game"), selectable=True)
+                                          width=cont.half(), app=MazeMenuApp), selectable=True)
         self.add_item("pong", Button(cont.lv_obj, text="Pong",
-                                     width=cont.half(), app=PongApp), selectable=True)
+                                     width=cont.half(), app=PongMenuApp), selectable=True)
         self.add_item("name", Button(cont.lv_obj, text="Name",
                                      width=cont.half(), app=NameApp), selectable=True)
 

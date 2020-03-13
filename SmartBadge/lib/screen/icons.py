@@ -34,10 +34,13 @@ class PongBoard():
     def move(self, x, y):
         self.board.lv_obj.set_pos(x, y)
 
-class Wall():
+
+class Wall(lv.obj):
 
     def __init__(self, parent, width, height, x, y):
-        Rectangle(parent, (x)*5, (y)*4, ((x+width)*5+5), ((y+height)*4)+4)
+        super().__init__(parent)
+        self.set_size(width*5, height*4)
+        self.set_pos(x*5, y*4)
 
 
 class Grid():
