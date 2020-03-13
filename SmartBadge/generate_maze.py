@@ -67,6 +67,3 @@ def reformat_to_line(walls):
         p2 = (wall[0]+wall[2]-1,wall[1]+wall[3]-1)
         line_points.append([p1,p2])
     return line_points
-
-w = generate_wall_list(grid)
-print(reformat_to_line(w))

@@ -2,6 +2,8 @@ import lvgl as lv
 from lib.screen.widgets import *
 import lib.app as app
 import lib.game.game as g
+from lib.app import SCR_X 
+from lib.app import SCR_Y
 import time as t
 import random as r
 from machine import Timer
@@ -16,8 +18,8 @@ class Ball(g.Sprite):
         self.direction = [1, 1]
 
     def reset(self):
-        self.x = 16
-        self.y = 16
+        self.x = SCR_X/2 
+        self.y = SCR_Y/2
         self.direction = [[-1, 1][r.randint(0, 1)], r.randint(-1, 1)]
 
 
@@ -93,12 +95,12 @@ class PongGameApp(app.GameApp):
                          btn_y=self.btn_y)
         self.score1 = 0
         self.score2 = 0
-        self.player_1 = self.add_sprite("Player1", 1, 16, 1, 10, typ="PADDLE")
-        self.player_2 = self.add_sprite("Player2", 30, 16, 1, 10, typ="PADDLE")
-        self.add_sprite("wall", 0, 0, 32, 2, typ="WALL")
-        self.add_sprite("wall", 0, 30, 32, 2, typ="WALL")
+        self.player_1 = self.add_sprite("Player1", 1, SCR_Y//2-5, 1, 10, typ="PADDLE")
+        self.player_2 = self.add_sprite("Player2", SCR_X-2, SCR_Y//2-5, 1, 10, typ="PADDLE")
+        self.add_sprite("wall", 0, 0, SCR_Y, 2, typ="WALL")
+        self.add_sprite("wall", 0, SCR_Y-2, SCR_Y, 2, typ="WALL")
         self.ball = Ball()
-        self.add_custom_sprite(self.ball, 16, 16)
+        self.add_custom_sprite(self.ball, SCR_X//2, SCR_Y//2 )
         self.tim = tim
         self.game_over = False
 
@@ -117,10 +119,10 @@ class PongGameApp(app.GameApp):
             Up = self.game.collision_edge(self.ball, 1, 1)
             Down = self.game.collision_edge(self.ball, 1, -1)
         
-            if self.ball.x <= - self.ball.width or  self.ball.x >= 32 + self.ball.width:
+            if self.ball.x <= - self.ball.width or  self.ball.x >= SCR_X + self.ball.width:
                 if self.ball.x <= - self.ball.width:
                     self.score2 += 1
-                elif self.ball.x >= 32 + self.ball.width: 
+                elif self.ball.x >= SCR_X + self.ball.width: 
                     self.score1 += 1
                 if self.score1 == 10: 
                     self.scores.update_text("Game over --- {s1}-{s2} --- {p} wins!".format(s1 = self.score1, s2 = self.score2, p="P1"))
@@ -132,8 +134,8 @@ class PongGameApp(app.GameApp):
                     self.scores.update_text("{s1}-{s2}".format(s1 = self.score1, s2 = self.score2))
                     self.ball.reset()
             else:
-                if (self.ball.x + self.ball.width == 29 or self.ball.x - self.ball.width == 3):
-                    if self.ball.y + self.ball.height == 29:
+                if (self.ball.x + self.ball.width == (SCR_X-3) or self.ball.x - self.ball.width == 3):
+                    if self.ball.y + self.ball.height == (SCR_Y-3):
                         self.ball.direction[1] = -2 
                     elif self.ball.y - self.ball.height == 3:
                         self.ball.direction[1] = 2 
@@ -167,6 +169,7 @@ class PongGameApp(app.GameApp):
     def move_ball(self):
         self.bounce_ball()
         if not self.game_over:
+            print(self.ball.direction[0], self.ball.direction[1])
             self.move_sprite("ball", self.ball.direction[0], self.ball.direction[1])
 
     def btn_up(self, x):

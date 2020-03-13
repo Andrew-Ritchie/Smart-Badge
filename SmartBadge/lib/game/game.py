@@ -98,6 +98,8 @@ class Game():
         sprite_id = self._get_id(sprite.name)
         count_x = abs(dx)
         count_y = abs(dy)
+        sprite.x = int(sprite.x)
+        sprite.y = int(sprite.y)
         try:
             sign_x = dx//count_x
         except:
@@ -182,7 +184,6 @@ class Game():
     #Replaces ids at given coords
     def replace(self, x,y, dx, dy, name="empty"):
         replace_id = self._get_id(name)
-
         for i in range(x, dx+1):
             if i >= self.x:
                 break
