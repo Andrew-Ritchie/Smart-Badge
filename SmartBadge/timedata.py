@@ -3,16 +3,21 @@ import ujson
 
 class TimeData(object):
 
-    def __init__(self, filename, subject):
+    def __init__(self, filename, subject, class):
 
         f = open(filename)
-        settings = ujson.load(f)
+        timedata = ujson.load(f)
 
-        self.title = settings[subject]['title']
-        self.time = settings[subject]['time']
-        self.location = settings[subject]['location']
+        try:
+            self.title = timedata[subject]['class' + class]['title']
+            self.time = timedata[subject]['class' + class]['time']
+            self.location = timedata[subject]['class' + class]['location']
+        except ValueError:
+            from newtimetable import TimeTableApp
+            mm = TimeTableApp(self.disp, self.buttons, self.tim)
+
 
 
     def get_time_data(self):
-        
+
         return "{} \"{}\" {}".format(self.title, self.time, self.location)
