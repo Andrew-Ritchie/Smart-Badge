@@ -1,4 +1,5 @@
 import lvgl as lv
+
 from lib.screen.widgets import Button
 from lib.app import App
 from event import EventApp
@@ -37,4 +38,5 @@ class TimeTableApp(App):
     def btn_b(self, x):
         focused = lv.group_get_focused(self.group)
         app = self.item_ids[id(focused)].app_name
-        ac_app = app(self.disp, self.buttons, self.tim)
+        subject = self.item_ids[id(focused)].subject
+        ac_app = app(self.disp, self.buttons, self.tim,subject, slot=0)
