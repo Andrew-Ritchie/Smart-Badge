@@ -110,6 +110,7 @@ class Game():
             sign_y = 0
         for i in range(0, count_x):
             if (self.collision_edge(sprite,0,sign_x)):
+                print("Collision X")
                 break
 
             if border:
@@ -136,6 +137,7 @@ class Game():
 
         for j in range(0,count_y):
             if (self.collision_edge(sprite,1,sign_y)):
+                print("Collision Y")
                 break
 
             if border:

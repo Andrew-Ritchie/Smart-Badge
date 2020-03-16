@@ -81,11 +81,11 @@ class MazeGameApp(GameApp):
         self.add_sprite("ball", 10, 10, 2, 2, "BALL")
         # border walls
         self.add_sprite("t_wall", 0, 0, 32, 1, "WALL")
-        self.add_sprite("l_wall", 0, 0, 1, 32, "WALL")
+        self.add_sprite("l_wall", 1, 0, 1, 32, "WALL")
         self.add_sprite("b_wall", 0, 31, 32, 1, "WALL")
         # wall with exit
-        self.add_sprite("r_wall1", 31, 0, 1, 17, "WALL")
-        self.add_sprite("r_wall2", 31, 20, 1, 13, "WALL")
+        self.add_sprite("r_wall1", 30, 0, 1, 17, "WALL")
+        self.add_sprite("r_wall2", 30, 20, 1, 13, "WALL")
 
         self.load_screen()
 
