@@ -10,13 +10,14 @@ class Setup:
         user['lastname'] = kwargs.get('lastname', None)
         user['nickname'] = kwargs.get('nickname', None)
         user['email'] = kwargs.get('email', None)
+        user['phone'] = kwargs.get('phone', None)
         conn = {}
         conn['ssid'] = kwargs.get('ssid', None)
         conn['password'] = kwargs.get('password', None)
         self.settings_data = {'user': user, 'connectivity': conn}
 
     def write_json_to(self, filename):
-        with open(filename, 'w') as f:
+        with open('../SmartBadge/' + filename, 'w') as f:
             json.dump(self.settings_data, f)
 
     def __str__(self):
