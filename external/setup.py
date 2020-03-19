@@ -25,10 +25,11 @@ class Setup:
 
 if __name__ == '__main__':
     s = Setup()
-    fn = input('First name of user> ')
-    ln = input('Last name of user> ')
-    nn = input('Nickname for user> ')
-    email = input('Email address for user> ')
+    fn = input('First name of user> ') or None
+    ln = input('Last name of user> ') or None
+    nn = input('Nickname for user> ') or None
+    email = input('Email address for user (optional)> ') or None
+    phone = input('Phone no. for user (optional)> ') or None
     s.set_settings(firstname=fn, lastname=ln, nickname=nn,
         email=email)
     s.write_json_to('settings.json')
