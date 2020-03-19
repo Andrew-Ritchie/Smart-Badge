@@ -1,4 +1,14 @@
 import json
+from segno import helpers
+
+
+class ContactGenerator():
+
+    def __init__(self, displayname, nickname, email, phone):
+        qr = helpers.make_vcard(
+            name=displayname, displayname=displayname, nickname=nickname, email=email, phone=phone)
+        qr.save("../SmartBadge/vcard.png", scale=1)
+
 
 class Setup:
     def __init__(self):
@@ -23,6 +33,7 @@ class Setup:
     def __str__(self):
         return str(self.settings_data)
 
+
 if __name__ == '__main__':
     s = Setup()
     fn = input('First name of user> ') or None
@@ -31,5 +42,7 @@ if __name__ == '__main__':
     email = input('Email address for user (optional)> ') or None
     phone = input('Phone no. for user (optional)> ') or None
     s.set_settings(firstname=fn, lastname=ln, nickname=nn,
-        email=email)
+                   email=email)
     s.write_json_to('settings.json')
+
+    ContactGenerator("{} {}".format(fn, ln), nn, email, phone)
