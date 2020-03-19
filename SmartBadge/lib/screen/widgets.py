@@ -73,7 +73,7 @@ class Label():
 class Button():
 
     def __init__(self, parent, text=None, font_size=None, x=0, y=0, width=None, height=None, app=None):
-        self.lv_obj = lv.btn(parent)        
+        self.lv_obj = lv.btn(parent)
         self.parent = parent
         self.x = x
         self.y = y
@@ -218,7 +218,7 @@ class Triangle():
             self.create_array(l_x, l_y, m_x, m_y, r_x, r_y))
 
 
-class Image(lv.img):
+class Image():
 
     # To use images, the image must be converted to a binary using the converter
     # at https://littlevgl.com/image-converter
@@ -226,33 +226,25 @@ class Image(lv.img):
     # It is also likely that the image will need to be resized. Note the dimensions
     # of the **image file** in PIXELS and use these as width and height
 
-    def __init__(self, parent, filename, x, y, width=None, height=None):
-        super().__init__(parent)
+    def __init__(self, parent, filename, x, y):
+        self.lv_obj = lv.img(parent)
         self.x = x
         self.y = y
-        self.width = width
-        self.height = height
-        self.set_pos(x, y)
+        self.lv_obj.set_pos(x, y)
         self.filename = filename
 
         with open(filename, 'rb') as f:
             img_data = f.read()
 
         img_dsc = lv.img_dsc_t({
-            'header': {
-                'always_zero': 0,
-                'w': self.width,
-                'h': self.height,
-                'cf': lv.img.CF.TRUE_COLOR
-            },
             'data_size': len(img_data),
             'data': img_data
         })
 
-        self.set_src(img_dsc)
+        self.lv_obj.set_src(img_dsc)
 
     def centralise(self):
-        self.align(None, lv.ALIGN.CENTER, 0, 0)
+        self.lv_obj.align(None, lv.ALIGN.CENTER, 0, 0)
 
 
 class Circle(lv.obj):
