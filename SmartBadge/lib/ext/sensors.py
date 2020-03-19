@@ -44,7 +44,7 @@ class Button(object):
 
     def _cb_edge(self, x):
         # Only count the edge if spaced by 0.12ms (switch debounce)
-        if time.ticks_diff(time.ticks_ms(), self.last_trigger) > 1000:
+        if time.ticks_diff(time.ticks_ms(), self.last_trigger) > 0.12:
             self.callback_edge(x)
             self.t = time.ticks_ms()
             gc.collect()
