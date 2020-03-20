@@ -38,22 +38,32 @@ class EventApp(App):
 
 
     def btn_left(self, x):
-        slot_num = self.slot - 1
-        time_data = TimeData("timedata.json", self.subject, slot_num)
-        title, time, location = time_data.get_time_data().split(" ")
-        self.title_widget.update_text(title)
-        self.time_widget.update_text(time)
-        self.location_widget.update_text(location)
+        self.slot -=1
+        try:
+            time_data = TimeData("timedata.json", self.subject, self.slot)
+            title, time, location = time_data.get_time_data().split(" ")
+            self.title_widget.update_text(title)
+            self.time_widget.update_text(time)
+            self.location_widget.update_text(location)
+        except:
+            from newtimetable import TimeTableApp
+            mm = TimeTableApp(self.disp, self.buttons, self.tim)
+ 
 
     def btn_right(self, x):
-        slot_num = self.slot + 1
-        time_data = TimeData("timedata.json", self.subject, slot_num)
-        title, time, location = time_data.get_time_data().split(" ")
-        self.title_widget.update_text(title)
-        self.time_widget.update_text(time)
-        self.location_widget.update_text(location)
+        self.slot +=1
+        try:
+            time_data = TimeData("timedata.json", self.subject, self.slot)
+            title, time, location = time_data.get_time_data().split(" ")
+            self.title_widget.update_text(title)
+            self.time_widget.update_text(time)
+            self.location_widget.update_text(location)
+        except:
+            from newtimetable import TimeTableApp
+            mm = TimeTableApp(self.disp, self.buttons, self.tim)
+ 
 
     def get_data(self):
-        slot_num = self.slot + 1
-        time_data = TimeData("timedata.json", self.subject, slot_num)
+        self.slot +=1
+        time_data = TimeData("timedata.json", self.subject, self.slot)
         return time_data.get_time_data().split(" ")

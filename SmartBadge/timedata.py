@@ -7,13 +7,9 @@ class TimeData(object):
 
         f = open(filename)
         timedata = ujson.load(f)
-        try:
-            self.title = timedata[subject]['class' + str(slot)]['title']
-            self.time = timedata[subject]['class' + str(slot)]['time']
-            self.location = timedata[subject]['class' + str(slot)]['location']
-        except ValueError:
-            from newtimetable import TimeTableApp
-            mm = TimeTableApp(self.disp, self.buttons, self.tim)
+        self.title = timedata[subject]['class' + str(slot)]['title']
+        self.time = timedata[subject]['class' + str(slot)]['time']
+        self.location = timedata[subject]['class' + str(slot)]['location']
 
 
 
