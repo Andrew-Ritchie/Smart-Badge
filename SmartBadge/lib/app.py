@@ -3,6 +3,7 @@ import lib.screen.widgets as w
 import lib.screen.icons as i
 import lib.game.game as g
 import time as t
+import gc
 
 NIGHT_THEME = lv.theme_night_init(210, lv.font_roboto_16)
 DEFAULT_THEME = lv.theme_default_init(210, lv.font_roboto_16)
@@ -11,20 +12,22 @@ MATERIAL_THEME = lv.theme_material_init(210, lv.font_roboto_16)
 DISP_SCALE_X = 5
 DISP_SCALE_Y = 4
 
+
 class App():
 
-    def __init__(self, name, display, buttons, timer, **kwargs):        
+    def __init__(self, name, display, buttons, timer, **kwargs):
+        gc.collect()
         self.disp = display
         self.buttons = buttons
         self.tim = timer
         # self.theme = th
         self.group = lv.group_create()
         # lv.theme_set_current(self.theme)
-        self.scr = lv.obj()        
+        self.scr = lv.obj()
         self.name = name
         self.items = {}
         self.item_ids = {}
-        self.cont = w.Container(self.scr)        
+        self.cont = w.Container(self.scr)
         self.set_buttons(kwargs.get("btn_left", lambda x: print("undefined left")),
                          kwargs.get("btn_right", lambda x: print(
                              "undefined right")),
@@ -36,6 +39,7 @@ class App():
                          kwargs.get("btn_x", lambda x: print("undefined x")),
                          kwargs.get("btn_y", lambda x: print("undefined y")),
                          )
+        gc.collect()
 
     def set_title(self, title, font_size=None):
         self.items['title'] = w.Label(
@@ -67,6 +71,7 @@ class App():
 class GameApp():
 
     def __init__(self, name, display, buttons, th=MATERIAL_THEME, debug=False, roll_over=False, border=False, kill=False, **kwargs):
+        gc.collect()
         self.disp = display
         self.buttons = buttons
         self.theme = th
@@ -89,6 +94,7 @@ class GameApp():
                          kwargs.get("btn_x", lambda x: print("undefined x")),
                          kwargs.get("btn_y", lambda x: print("undefined y")),
                          )
+        gc.collect()
 
     def load_screen(self):
         lv.scr_load(self.scr)
