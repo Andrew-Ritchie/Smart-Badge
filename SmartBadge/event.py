@@ -18,11 +18,15 @@ class EventApp(App):
         cont = self.get_cont()
         cont.set_center()
 
-        first, nick, last = self.get_data()
-    
-        self.add_item("Title", Label(cont.lv_obj, first, font_size=28))
-        self.add_item("Time", Label(cont.lv_obj, nick))
-        self.add_item("Location", Label(cont.lv_obj, last))
+        title, time, location = self.get_data()
+
+        self.title_widget = Label(cont.lv_obj, title, font_size=28)
+        self.time_widget = Label(cont.lv_obj, time)
+        self.location_widget = Label(cont.lv_obj, location)
+
+        self.add_item("Title", self.title_widget)
+        self.add_item("Time", self.time_widget)
+        self.add_item("Location", self.location_widget)
 
         #self.add_item("Back", Button(cont.lv_obj, text="Back",
                                           #width=cont.half(), app=EventApp), selectable=True)
@@ -33,24 +37,23 @@ class EventApp(App):
         self.load_screen()
 
 
-
     def btn_left(self, x):
         slot_num = self.slot - 1
         time_data = TimeData("timedata.json", self.subject, slot_num)
-        return time_data.get_time_data().split(" ")
-        # focused = lv.group_get_focused(self.group)
-        # app = self.item_ids[id(focused)].app_name
-        # ac_app = app(self.disp, self.buttons, self.tim, self.subject, self.slot)
+        title, time, location = time_data.get_time_data().split(" ")
+        self.title_widget.update_text(title)
+        self.time_widget.update_text(time)
+        self.location_widget.update_text(location)
 
     def btn_right(self, x):
         slot_num = self.slot + 1
         time_data = TimeData("timedata.json", self.subject, slot_num)
-        return time_data.get_time_data().split(" ")
-        # focused = lv.group_get_focused(self.group)
-        # app = self.item_ids[id(focused)].app_name
-        # ac_app = app(self.disp, self.buttons, self.tim, self.subject, self.slot)
+        title, time, location = time_data.get_time_data().split(" ")
+        self.title_widget.update_text(title)
+        self.time_widget.update_text(time)
+        self.location_widget.update_text(location)
 
     def get_data(self):
-        # slot_num = self.slot + 1
+        slot_num = self.slot + 1
         time_data = TimeData("timedata.json", self.subject, slot_num)
         return time_data.get_time_data().split(" ")

@@ -39,4 +39,4 @@ class TimeTableApp(App):
         focused = lv.group_get_focused(self.group)
         app = self.item_ids[id(focused)].app_name
         subject = self.item_ids[id(focused)].subject
-        ac_app = app(self.disp, self.buttons, self.tim,subject, slot=1)
+        ac_app = app(self.disp, self.buttons, self.tim,subject, slot=0)
