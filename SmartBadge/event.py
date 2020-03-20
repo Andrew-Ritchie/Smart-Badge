@@ -13,7 +13,7 @@ class EventApp(App):
                          btn_right=self.btn_right,
                          )
 
-        self.subject = "EEE"
+        self.subject = subject 
         self.slot = slot
         cont = self.get_cont()
         cont.set_center()

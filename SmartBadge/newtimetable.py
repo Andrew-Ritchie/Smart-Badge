@@ -18,14 +18,14 @@ class TimeTableApp(App):
 
         cont = self.get_cont()
 
-        self.add_item("timetable", Button(cont.lv_obj, text="Electronics",
+        self.add_item("Electronics", Button(cont.lv_obj, text="Electronics",
                                     app=EventApp, subject="EEE"), selectable=True)
-        self.add_item("maze_game", Button(cont.lv_obj, text="Aeronautical",
-                                    app="MazeMenuApp", subject="Aero"), selectable=True)
-        self.add_item("pong", Button(cont.lv_obj, text="Mechanical",
-                                    app="PongMenuApp", subject="Mech"), selectable=True)
-        self.add_item("name", Button(cont.lv_obj, text="Civil",
-                                    app="NameApp", subject="Civil"), selectable=True)
+        self.add_item("Aero", Button(cont.lv_obj, text="Aeronautical",
+                                    app=EventApp, subject="Aero"), selectable=True)
+        self.add_item("Mech", Button(cont.lv_obj, text="Mechanical",
+                                    app=EventApp, subject="Mech"), selectable=True)
+        self.add_item("Civil", Button(cont.lv_obj, text="Civil",
+                                    app=EventApp, subject="Civil"), selectable=True)
 
         self.load_screen()
 
