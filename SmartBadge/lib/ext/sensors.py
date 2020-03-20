@@ -3,11 +3,47 @@ import time
 
 
 class Accelerometer(object):
-    from lib.ext.lis3dh import LIS3DH_I2C
 
-    def __init__(self, freq=4000):
-        self.sensor = LIS3DH_I2C(
-            I2C(1, scl=Pin(14), sda=Pin(13), freq=freq))
+    def __init__(self,freq=4000, deadzone=1):
+        # Minimum setup
+        self._i2c = I2C(1, scl=Pin(14), sda=Pin(13), freq=freq)
+        self.sensor = lis3dh.LIS3DH_I2C(self._i2c)
+
+        # Set up tilt interrupts
+        self._deadzone = deadzone
+        self._handler_tilt_f = None
+        self._handler_tilt_b = None
+        self._handler_tilt_l = None
+        self._handler_tilt_r = None
+        from machine import Timer
+        self._timer = Timer(-1)
+        self._timer.init(period=200, mode=Timer.PERIODIC, callback=lambda t: self._timer_callback(t))
+
+    def _timer_callback(self, t):
+        deadzone = self._deadzone
+        x, y, _ = self.get_values()
+
+        if x < -deadzone:
+            self._handler_tilt_l() if self._handler_tilt_l else None
+        elif x > deadzone:
+            self._handler_tilt_r() if self._handler_tilt_r else None
+
+        if y < -deadzone:
+            self._handler_tilt_b() if self._handler_tilt_b else None
+        elif y > deadzone:
+            self._handler_tilt_f() if self._handler_tilt_f else None
+
+    def irq_tilt_f(self, handler=None):
+        self._handler_tilt_f = handler
+
+    def irq_tilt_b(self, handler=None):
+        self._handler_tilt_b = handler
+
+    def irq_tilt_l(self, handler=None):
+        self._handler_tilt_l = handler
+
+    def irq_tilt_r(self, handler=None):
+        self._handler_tilt_r = handler
 
     def get_values(self):
         return self.sensor.acceleration
@@ -20,7 +56,6 @@ class Accelerometer(object):
 
     def get_value_z(self):
         return self.sensor.acceleration[2]
-
 
 class Button(object):
 
@@ -70,7 +105,8 @@ class Buttons(object):
 
     def get_values(self):
         return map(lambda x: x.get_value(), (self.up, self.down, self.left, self.right,
-                                             self.a, self.b, self.x, self.y))
+                self.a, self.b, self.x, self.y))
+
 
     def get_value_up(self):
         return self.up.get_value()

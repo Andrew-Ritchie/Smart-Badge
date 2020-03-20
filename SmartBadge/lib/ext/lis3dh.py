@@ -94,8 +94,6 @@ class LIS3DH:
     def __init__(self, int1=None, int2=None):
         # Check device ID.
         device_id = self._read_register_byte(_REG_WHOAMI)
-        print("device id")
-        print (device_id)
         #if device_id != 0x33:
         #    raise RuntimeError('Failed to find LIS3DH!')
         # Reboot
@@ -380,4 +378,3 @@ class LIS3DH_SPI(LIS3DH):
         self._buffer[1] = value & 0xFF
         with self._spi as spi:
             spi.write(self._buffer, start=0, end=2) # pylint: disable=no-member
-
