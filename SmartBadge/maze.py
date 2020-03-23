@@ -6,6 +6,8 @@ from lib.screen.widgets import Button, Label
 from settings import HighScores
 from generate_maze import generate_wall_list,reformat_to_line
 import gc
+import time as t
+from machine import Timer
 
 class MazeMenuApp(App):
 
@@ -79,10 +81,13 @@ class MazeGameApp(GameApp):
                          btn_y=self.btn_y)
 
         self.tim = tim
-        self.add_sprite("ball", self.game.x//2-1, self.game.y//2-1, 2, 2, "BALL")
+        self.ball = self.add_sprite("ball", self.game.x//2-1, self.game.y//2-1, 2, 2, "BALL")
         # border walls
         # wall with exit
         self.load_screen()
+        self.tim.init(period=50, mode=Timer.PERIODIC,
+                      callback=lambda t: self.main())
+        self.game_over = False
         gc.collect()
         # internal walls
         grid = [[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,],
@@ -99,9 +104,9 @@ class MazeGameApp(GameApp):
                 [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,],
                 [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,],
                 [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,],
-                [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,],
-                [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,],
-                [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,],
+                [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,],
+                [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,],
+                [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,],
                 [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,],
                 [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,],
                 [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,],
@@ -127,6 +132,7 @@ class MazeGameApp(GameApp):
         for wall in walls:
             i += 1
             self.add_sprite("wall {i}".format(i=i), wall[0], wall[1], wall[2], wall[3], "WALL")
+        self.start = t.time()
 
     def btn_up(self, x):
         self.move_sprite("ball", 0, -1)
@@ -142,3 +148,13 @@ class MazeGameApp(GameApp):
 
     def btn_y(self, x):
         MazeMenuApp(self.disp, self.buttons, self.tim)
+
+    def main(self):
+        if not self.game_over:
+
+            if (self.ball.x > self.game.x or self.ball.x < 0) or (self.ball.y > self.game.y or self.ball.y < 0):
+                self.game_over = True
+                final_time = t.time()
+                self.score = Label(self.scr, "Completed in-{t} seconds".format(t = final_time - self.start), font_size=28)
+        
+
