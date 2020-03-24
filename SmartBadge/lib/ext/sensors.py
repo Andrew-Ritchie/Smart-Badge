@@ -1,6 +1,7 @@
 from machine import I2C, Pin
 import time
-
+import gc
+import lib.ext.lis3dh as lis3dh
 
 class Accelerometer(object):
 
