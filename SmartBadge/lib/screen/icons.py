@@ -39,8 +39,8 @@ class Wall(lv.obj):
 
     def __init__(self, parent, width, height, x, y):
         super().__init__(parent)
-        self.set_size(width*5, height*4)
-        self.set_pos(x*5, y*4)
+        self.set_size(width*4, height*4)
+        self.set_pos(x*4, y*4)
 
 
 class Grid():
@@ -51,7 +51,7 @@ class Grid():
         for i in range(width):
             for j in range(height):
                 self.rects.append(
-                    Rectangle(parent, (x+i)*5, (y+j)*4, ((x+i)*5+5), ((y+j)*4)+4))
+                    Rectangle(parent, (x+i)*4, (y+j)*4, ((x+i)*4+4), ((y+j)*4)+4))
 
 
 class GameObj():

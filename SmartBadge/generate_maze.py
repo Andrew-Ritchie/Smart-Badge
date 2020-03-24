@@ -1,10 +1,20 @@
+def update(tracker,val):
+    for n in range(0,len(tracker)):
+        if val < tracker[n][1]:
+            break
+    
+    new_l = tracker[n][1]
+    tracker[n][1] = val
+    tracker.insert(n+1, [val+1, new_l])
+    return tracker
+
+
 def vert_wall_helper(i,j,x,y,grid, current_wall, tracker, wall_size):
     if wall_size == 1:
         for k in range (i+1, y):
-            if grid[k][j-1] == 1:
+            if grid[k][j] == 1:
                 current_wall[3] +=1
-                tracker[k][-1][1] = j-1
-                tracker[k].append([j,x])
+                tracker[k] = update(tracker[k], j)
             else:
                 break
     return tracker, current_wall
@@ -31,21 +41,20 @@ def generate_wall_list(grid):
                 else:
                     if wall == True:
                         wall = False
-                        tracker, current_wall = vert_wall_helper(i,j,x,y,grid, current_wall, tracker, wall_size)
+                        tracker, current_wall = vert_wall_helper(i,j-1,x,y,grid, current_wall, tracker, wall_size)
                         walls.append(tuple(current_wall))
                         wall_size = 0
                     current_wall = [j+1, i, 0, 1]
 
             if wall == True:
                 wall = False
-                tracker, current_wall = vert_wall_helper(i,j+1,x,y,grid, current_wall, tracker, wall_size)
+                tracker, current_wall = vert_wall_helper(i,j,x,y,grid, current_wall, tracker, wall_size)
                 walls.append(tuple(current_wall))
                 wall_size = 0
         
         if wall == True:
             wall = False
-            tracker, current_wall = vert_wall_helper(i,j+1,x,y,grid, current_wall, tracker, wall_size)
-
+            tracker, current_wall = vert_wall_helper(i,j,x,y,grid, current_wall, tracker, wall_size)
             walls.append(tuple(current_wall))
             wall_size = 0
         
