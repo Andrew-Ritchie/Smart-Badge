@@ -1,12 +1,1 @@
-{
-  "user":{
-    "firstname": "Joseph",
-    "lastname": "Bloggs",
-    "nickname": "Joey",
-    "email": "joey99@example.com"
-  },
-  "connectivity":{
-    "ssid": "",
-    "password": "" 
-  }
-}
+{"user": {"firstname": "Joseph", "lastname": "Bloggs", "nickname": "Joey", "email": "joey99@example.com", "phone": null}, "connectivity": {"ssid": null, "password": null}}
