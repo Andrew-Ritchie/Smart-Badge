@@ -1,0 +1,35 @@
+{
+  "EEE": {
+    "class1": {
+      "title": "Intro-to-EEE",
+      "time": "13:00",
+      "location": "JWS105"
+    },
+    "class2": {
+      "title": "Why-ESE?",
+      "time": "15:00",
+      "location": "JWS105"
+    }
+  },
+  "Aero": {
+    "class1": {
+      "title": "Intro-to-Aero",
+      "time": "13:00",
+      "location": "JWS105"
+    }
+  },
+  "Mech": {
+    "class1": {
+      "title": "Intro-to-Mech",
+      "time": "13:00",
+      "location": "JWS105"
+    }
+  },
+  "Civil": {
+    "class1": {
+      "title": "Intro-to-Civil",
+      "time": "13:00",
+      "location": "JWS105"
+    }
+  }
+}
