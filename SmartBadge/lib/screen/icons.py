@@ -1,6 +1,6 @@
 import lvgl as lv
 from lib.screen.widgets import *
-
+screen_factor = 4
 
 class Ball(Circle):
 
@@ -39,8 +39,8 @@ class Wall(lv.obj):
 
     def __init__(self, parent, width, height, x, y):
         super().__init__(parent)
-        self.set_size(width*5, height*4)
-        self.set_pos(x*5, y*4)
+        self.set_size(width*screen_factor, height*screen_factor)
+        self.set_pos(x*screen_factor, y*screen_factor)
 
 
 class Grid():
@@ -51,7 +51,7 @@ class Grid():
         for i in range(width):
             for j in range(height):
                 self.rects.append(
-                    Rectangle(parent, (x+i)*5, (y+j)*4, ((x+i)*5+5), ((y+j)*4)+4))
+                    Rectangle(parent, (x+i)*screen_factor, (y+j)*screen_factor, ((x+i)*screen_factor+screen_factor), ((y+j)*screen_factor)+screen_factor))
 
 
 class GameObj():

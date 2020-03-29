@@ -1,9 +1,13 @@
 import lvgl as lv
+from lib.ext.sensors import Accelerometer
 from lib.app import App, GameApp
 import lib.game.game as g
 from lib.screen.widgets import Button, Label
 from settings import HighScores
-
+from generate_maze import generate_wall_list,reformat_to_line
+import gc
+import time as t
+from machine import Timer
 
 class MazeMenuApp(App):
 
@@ -70,44 +74,89 @@ class MazeGameApp(GameApp):
     def __init__(self, disp, buttons, tim):
 
         super().__init__("Maze", display=disp, buttons=buttons,  debug=False, roll_over=False, border=False, kill=False,
-                         btn_left=self.btn_left,
-                         btn_right=self.btn_right,
-                         btn_up=self.btn_up,
-                         btn_down=self.btn_down,
                          btn_y=self.btn_y)
 
-        self.tim = tim
-        self.add_sprite("ball", 10, 10, 2, 2, "BALL")
+        self.ball = self.add_sprite("ball", self.game.x//2-1, self.game.y//2-1, 2, 2, "BALL")
         # border walls
-        self.add_sprite("t_wall", 0, 0, 32, 1, "WALL")
-        self.add_sprite("l_wall", 0, 0, 1, 32, "WALL")
-        self.add_sprite("b_wall", 0, 31, 32, 1, "WALL")
         # wall with exit
-        self.add_sprite("r_wall1", 31, 0, 1, 17, "WALL")
-        self.add_sprite("r_wall2", 31, 20, 1, 13, "WALL")
-
         self.load_screen()
-
+        self.game_over = False
+        gc.collect()
         # internal walls
+        grid = [[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,],
+                [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,],
+                [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,],
+                [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,],
+                [1,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,1,],
+                [1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,],
+                [1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,],
+                [1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,],
+                [1,0,0,0,1,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,1,0,0,0,1,],
+                [1,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,1,],
+                [1,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,1,],
+                [1,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,1,],
+                [1,0,0,0,1,0,0,0,1,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,1,0,0,0,1,0,0,0,1,],
+                [1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,],
+                [1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,0,],
+                [1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,0,],
+                [1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,0,],
+                [1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,],
+                [1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,],
+                [1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,],
+                [1,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,],
+                [1,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,],
+                [1,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,],
+                [1,0,0,0,1,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,1,0,0,0,1,0,0,0,1,],
+                [1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,1,],
+                [1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,1,],
+                [1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,1,],
+                [1,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,1,0,0,0,1,],
+                [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,],
+                [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,],
+                [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,],
+                [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,],]
 
-        # self.add_sprite("WALL", 3, 1, 1, 11)
-        # self.add_sprite("WALL", 3, 17, 1, 6)
-        # self.add_sprite("WALL", 3, 25, 1, 11)
-        # self.add_sprite("WALL", 5, 20, 1, 6)
-        # self.add_sprite("WALL", 7, 5, 1, 2)
-        # self.add_sprite("WALL", 15, 31, 1, 17)
+        walls = generate_wall_list(grid)
+        lines = reformat_to_line(walls)
+        i = 0
+        for wall in walls:
+            i += 1
+            self.add_sprite("wall {i}".format(i=i), wall[0], wall[1], wall[2], wall[3], "WALL")
+        a = Accelerometer()
+        a.irq_tilt_f(handler=self.btn_up)
+        a.irq_tilt_b(handler=self.btn_down)
+        a.irq_tilt_r(handler=self.btn_right)
+        a.irq_tilt_l(handler=self.btn_left)
+        self.start = t.time()
 
-    def btn_up(self, x):
-        self.move_sprite("ball", 0, -1)
+    def btn_up(self):
+        if not self.game_over:
+            self.end()
+            self.move_sprite("ball", 0, -1)
 
-    def btn_down(self, x):
-        self.move_sprite("ball", 0, 1)
+    def btn_down(self):
+        if not self.game_over:
+            self.end()
+            self.move_sprite("ball", 0, 1)
 
-    def btn_left(self, x):
-        self.move_sprite("ball", -1, 0)
+    def btn_left(self):
+        if not self.game_over:
+            self.end()
+            self.move_sprite("ball", -1, 0)
 
-    def btn_right(self, x):
-        self.move_sprite("ball", 1, 0)
+    def btn_right(self):
+        if not self.game_over:
+            self.end()
+            self.move_sprite("ball", 1, 0)
 
     def btn_y(self, x):
         MazeMenuApp(self.disp, self.buttons, self.tim)
+
+    def end(self):
+        if (self.ball.x > self.game.x or self.ball.x < 0) or (self.ball.y > self.game.y or self.ball.y < 0):
+            self.game_over = True
+            final_time = t.time()
+            self.score = Label(self.scr, "Completed in {t} seconds".format(t = final_time - self.start), font_size=28)
+
+        
+

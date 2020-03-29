@@ -9,8 +9,9 @@ NIGHT_THEME = lv.theme_night_init(210, lv.font_roboto_16)
 DEFAULT_THEME = lv.theme_default_init(210, lv.font_roboto_16)
 MATERIAL_THEME = lv.theme_material_init(210, lv.font_roboto_16)
 
-DISP_SCALE_X = 5
-DISP_SCALE_Y = 4
+DISP_SCALE = 4
+SCR_Y = 32
+SCR_X = 40
 
 
 class App():
@@ -69,7 +70,7 @@ class App():
 
 
 class GameApp():
-
+    
     def __init__(self, name, display, buttons, th=MATERIAL_THEME, debug=False, roll_over=False, border=False, kill=False, **kwargs):
         gc.collect()
         self.disp = display
@@ -78,7 +79,7 @@ class GameApp():
         # lv.theme_set_current(self.theme)
         self.scr = lv.obj()
         self.name = name
-        self.game = g.Game(32, 32, debugger=debug)
+        self.game = g.Game(SCR_X, SCR_Y, debugger=debug)
         self.sprites = {}
         self.roll_over = roll_over
         self.border = border
@@ -104,8 +105,8 @@ class GameApp():
         for x in range(self.game.x):
             for y in range(self.game.y):
                 if self.game.present_at(x, y) != "ball":
-                    w.Rectangle(self.scr, x*DISP_SCALE_X, y *
-                                DISP_SCALE_Y, (x*DISP_SCALE_X)+DISP_SCALE_X, (y*DISP_SCALE_Y)+DISP_SCALE_Y)
+                    w.Rectangle(self.scr, x*DISP_SCALE, y *
+                                DISP_SCALE, (x*DISP_SCALE)+DISP_SCALE, (y*DISP_SCALE)+DISP_SCALE)
 
     def draw_initial_sprite(self, sprite):
         x = sprite.x
@@ -114,10 +115,10 @@ class GameApp():
         height = sprite.height
         if sprite.type == "BALL":
             sprite.set_icon(
-                i.Ball(self.scr, width*DISP_SCALE_X, height*DISP_SCALE_Y, x*DISP_SCALE_X, y*DISP_SCALE_Y))
+                i.Ball(self.scr, width*DISP_SCALE, height*DISP_SCALE, x*DISP_SCALE, y*DISP_SCALE))
         elif sprite.type == "PADDLE":
-            sprite.set_icon(i.PongBoard(self.scr, width*DISP_SCALE_X,
-                                        height*DISP_SCALE_Y, x*DISP_SCALE_X, y*DISP_SCALE_Y))
+            sprite.set_icon(i.PongBoard(self.scr, width*DISP_SCALE,
+                                        height*DISP_SCALE, x*DISP_SCALE, y*DISP_SCALE))
         elif sprite.type == "WALL":
             sprite.set_icon(i.Wall(self.scr, width, height, x, y))
         else:
@@ -149,7 +150,7 @@ class GameApp():
             return (spr.name, sprite_id)
 
         if spr.type != None:
-            spr.icon.move(x*DISP_SCALE_X, y*DISP_SCALE_Y)
+            spr.icon.move(x*DISP_SCALE, y*DISP_SCALE)
 
     def sprite_wait(self, length_of_time):
         inital = t.time()

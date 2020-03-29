@@ -98,6 +98,8 @@ class Game():
         sprite_id = self._get_id(sprite.name)
         count_x = abs(dx)
         count_y = abs(dy)
+        sprite.x = int(sprite.x)
+        sprite.y = int(sprite.y)
         try:
             sign_x = dx//count_x
         except:
@@ -108,6 +110,7 @@ class Game():
             sign_y = 0
         for i in range(0, count_x):
             if (self.collision_edge(sprite,0,sign_x)):
+                print("Collision X")
                 break
 
             if border:
@@ -134,6 +137,7 @@ class Game():
 
         for j in range(0,count_y):
             if (self.collision_edge(sprite,1,sign_y)):
+                print("Collision Y")
                 break
 
             if border:
@@ -182,7 +186,6 @@ class Game():
     #Replaces ids at given coords
     def replace(self, x,y, dx, dy, name="empty"):
         replace_id = self._get_id(name)
-
         for i in range(x, dx+1):
             if i >= self.x:
                 break
